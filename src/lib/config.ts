@@ -84,6 +84,7 @@ export const apiConfig = {
     products: '/api/products/',
     productDetail: (id: string) => `/api/products/${id}/`,
     categories: '/api/categories/',
+    orders: '/api/orders/',
     
     // Checkout (from core/urls.py)
     calculateShipping: '/api/checkout/calculate-shipping/',

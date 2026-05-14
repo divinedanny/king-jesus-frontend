@@ -184,6 +184,16 @@ export const checkoutApi = {
   },
 };
 
+// Orders API
+export const ordersApi = {
+  getAll: async (): Promise<any[]> => {
+    return fetchApi(apiConfig.endpoints.orders);
+  },
+  getById: async (id: string): Promise<any> => {
+    return fetchApi(`${apiConfig.endpoints.orders}${id}/`);
+  },
+};
+
 // Tracking API
 export const trackingApi = {
   getStatus: async (trackingNumber: string): Promise<any> => {
@@ -229,6 +239,7 @@ export default {
   auth: authApi,
   shipping: shippingApi,
   checkout: checkoutApi,
+  orders: ordersApi,
   tracking: trackingApi,
   reviews: reviewsApi,
   wishlist: wishlistApi,

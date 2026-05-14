@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Search, Package, Truck, CheckCircle, Clock, MapPin, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -103,21 +104,33 @@ const getStatusColor = (status: string) => {
 };
 
 export default function TrackingPage() {
+  const searchParams = useSearchParams();
   const [trackingNumber, setTrackingNumber] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [trackingData, setTrackingData] = useState<TrackingInfo | null>(null);
   const [error, setError] = useState('');
 
+  useEffect(() => {
+    const number = searchParams.get('number');
+    if (number) {
+      setTrackingNumber(number);
+      performTrack(number);
+    }
+  }, [searchParams]);
+
   const handleTrack = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!trackingNumber.trim()) return;
+    performTrack(trackingNumber.trim());
+  };
 
+  const performTrack = async (number: string) => {
     setIsLoading(true);
     setError('');
     setTrackingData(null);
 
     try {
-      const response = await trackingApi.getStatus(trackingNumber.trim());
+      const response = await trackingApi.getStatus(number);
       
       // Map Terminal Africa tracking response to TrackingInfo type
       // Based on Terminal Africa API docs, tracking response has a data field
