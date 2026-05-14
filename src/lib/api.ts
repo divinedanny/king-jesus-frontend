@@ -1,5 +1,5 @@
 import { apiConfig } from './config';
-import { Product, Category, User } from '@/types';
+import { Product, Category, User, Review, Wishlist } from '@/types';
 
 class ApiError extends Error {
   status: number;
@@ -191,6 +191,38 @@ export const trackingApi = {
   },
 };
 
+// Reviews API
+export const reviewsApi = {
+  getByProduct: async (productId: string): Promise<Review[]> => {
+    return fetchApi<Review[]>(`${apiConfig.endpoints.reviews}?product=${productId}`);
+  },
+  create: async (data: { product: string; rating: number; comment: string }): Promise<Review> => {
+    return fetchApi<Review>(apiConfig.endpoints.reviews, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  },
+};
+
+// Wishlist API
+export const wishlistApi = {
+  get: async (): Promise<Wishlist[]> => {
+    return fetchApi<Wishlist[]>(apiConfig.endpoints.wishlist);
+  },
+  addProduct: async (productId: string): Promise<void> => {
+    await fetchApi(`${apiConfig.endpoints.wishlist}add_product/`, {
+      method: 'POST',
+      body: JSON.stringify({ product_id: productId }),
+    });
+  },
+  removeProduct: async (productId: string): Promise<void> => {
+    await fetchApi(`${apiConfig.endpoints.wishlist}remove_product/`, {
+      method: 'POST',
+      body: JSON.stringify({ product_id: productId }),
+    });
+  },
+};
+
 export { ApiError };
 export default {
   products: productsApi,
@@ -198,4 +230,6 @@ export default {
   shipping: shippingApi,
   checkout: checkoutApi,
   tracking: trackingApi,
+  reviews: reviewsApi,
+  wishlist: wishlistApi,
 };

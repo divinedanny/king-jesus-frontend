@@ -97,6 +97,10 @@ export const apiConfig = {
     // Tracking
     tracking: (trackingNumber: string) => `/api/tracking/${trackingNumber}/`,
     
+    // Reviews & Wishlist
+    reviews: '/api/reviews/',
+    wishlist: '/api/wishlist/',
+    
     // Auth (from config/urls.py)
     auth: {
       googleLogin: '/api/auth/google/',
