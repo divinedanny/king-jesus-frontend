@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { useCartStore } from '@/lib/store';
+import { siteConfig } from '@/lib/config';
 
 interface LocaleProviderProps {
   children: React.ReactNode;
@@ -17,7 +18,7 @@ function LocaleProvider({ children, isLocal, onToggleLocale }: LocaleProviderPro
   
   useEffect(() => {
     // Update the document title based on locale
-    const baseTitle = 'King Jesus Collection';
+    const baseTitle = siteConfig.name;
     document.title = isLocal ? `🇳🇬 ${baseTitle}` : `🌍 ${baseTitle}`;
   }, [isLocal]);
 

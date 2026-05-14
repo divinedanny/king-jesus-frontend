@@ -55,8 +55,8 @@ export const theme = {
 
 // WhatsApp configuration
 export const whatsappConfig = {
-  phoneNumber: '2347049497394',
-  getMessageLink: (message: string) => 
+  phoneNumber: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '2347049497394',
+  getMessageLink: (message: string) =>
     `https://wa.me/${whatsappConfig.phoneNumber}?text=${encodeURIComponent(message)}`,
   formatOrderMessage: (order: {
     name: string;
@@ -74,6 +74,12 @@ ${itemsList}
 Total: ${order.total} ${order.currency}
 Shipping Address: ${order.address}`;
   },
+};
+
+// Site configuration
+export const siteConfig = {
+  name: process.env.NEXT_PUBLIC_COMPANY_NAME || 'King Jesus Collection',
+  description: 'Premium Fashion and Accessories',
 };
 
 // API configuration - points to Django backend

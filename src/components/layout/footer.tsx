@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { Phone, Mail, MapPin, Clock } from 'lucide-react';
+import { siteConfig, whatsappConfig } from '@/lib/config';
 
 export function Footer() {
   return (
@@ -11,9 +12,9 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Company Info */}
           <div>
-            <h3 className="text-xl font-bold text-white mb-4">King Jesus Collection</h3>
+            <h3 className="text-xl font-bold text-white mb-4">{siteConfig.name}</h3>
             <p className="text-sm text-gray-400 mb-4">
-              Premium faith-based products for the modern Christian. Quality merchandise that speaks to your faith.
+              {siteConfig.description}
             </p>
           </div>
 
@@ -50,7 +51,7 @@ export function Footer() {
             <ul className="space-y-2">
               <li className="flex items-center gap-2 text-gray-400">
                 <Phone className="h-4 w-4" />
-                <span>+234 704 949 7394</span>
+                <span>+{whatsappConfig.phoneNumber}</span>
               </li>
               <li className="flex items-center gap-2 text-gray-400">
                 <Mail className="h-4 w-4" />
@@ -81,7 +82,7 @@ export function Footer() {
         <div className="border-t border-gray-800 mt-8 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-sm text-gray-500">
-              © {new Date().getFullYear()} King Jesus Collection. All rights reserved.
+              © {new Date().getFullYear()} {siteConfig.name}. All rights reserved.
             </p>
             <div className="flex gap-6 text-sm">
               <Link href="/privacy" className="text-gray-400 hover:text-white transition-colors">

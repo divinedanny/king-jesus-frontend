@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Mail, Lock, User, ArrowLeft } from 'lucide-react';
 import { useAuthStore } from '@/lib/auth-store';
+import { siteConfig } from '@/lib/config';
 import { Button } from '@/components/ui/button';
 import { Input, Card, CardContent, CardFooter } from '@/components/ui/card';
 import Link from 'next/link';
@@ -125,8 +126,8 @@ export default function AuthPage() {
             </h1>
             <p className="text-gray-600">
               {isLogin
-                ? 'Sign in to continue shopping'
-                : 'Join the King Jesus Collection community'}
+                ? `Sign in to your ${siteConfig.name} account`
+                : `Join the ${siteConfig.name} community`}
             </p>
           </div>
 
