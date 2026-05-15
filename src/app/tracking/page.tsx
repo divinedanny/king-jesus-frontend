@@ -116,7 +116,7 @@ export default function TrackingPage() {
     setTrackingData(null);
 
     try {
-      const response = await trackingApi.getStatus(number);
+      const response = (await trackingApi.getStatus(number)) as any;
       
       // Map Terminal Africa tracking response to TrackingInfo type
       if (response && response.status) {
@@ -127,7 +127,7 @@ export default function TrackingPage() {
           carrier: data.carrier_name || 'Terminal Africa',
           status: data.status,
           estimated_delivery: data.estimated_delivery_date,
-          events: (data.events || []).map((event: unknown, index: number) => ({
+          events: (data.events || []).map((event: any, index: number) => ({
             id: index.toString(),
             status: event.status,
             description: event.description,
@@ -144,13 +144,13 @@ export default function TrackingPage() {
           setError('No tracking information found for this number. Please check and try again.');
         }
       }
-    } catch (error: unknown) {
-      console.error('Tracking error:', error);
+    } catch (err: any) {
+      console.error('Tracking error:', err);
       const mockData = mockTrackingData[number.toUpperCase()];
       if (mockData) {
         setTrackingData(mockData);
       } else {
-        setError(error.message || 'Failed to fetch tracking information. Please try again.');
+        setError(err.message || 'Failed to fetch tracking information. Please try again.');
       }
     } finally {
       setIsLoading(false);

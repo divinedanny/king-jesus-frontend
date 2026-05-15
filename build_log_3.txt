@@ -1,0 +1,23 @@
+
+> king-jesus-collection@0.1.0 build
+> next build
+
+▲ Next.js 16.2.6 (Turbopack)
+- Environments: .env.local
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 5.2s
+  Running TypeScript ...
+Failed to type check.
+
+./src/app/checkout/page.tsx:118:37
+Type error: 'response' is of type 'unknown'.
+
+  [90m116 |[0m       [90m// Map Terminal Africa rates to ShippingRate type[0m
+  [90m117 |[0m       [90m// The response from backend is what Terminal Africa returns[0m
+[31m[1m>[0m [90m118 |[0m       [36mconst[0m rates: [33mShippingRate[0m[] = response.data.map((rate: { 
+  [90m    |[0m                                     [31m[1m^[0m
+  [90m119 |[0m         rate_id: string; 
+  [90m120 |[0m         carrier_name: string; 
+  [90m121 |[0m         service_name: string; 
+Next.js build worker exited with code: 1 and signal: null

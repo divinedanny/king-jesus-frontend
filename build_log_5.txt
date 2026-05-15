@@ -1,0 +1,23 @@
+
+> king-jesus-collection@0.1.0 build
+> next build
+
+▲ Next.js 16.2.6 (Turbopack)
+- Environments: .env.local
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 4.7s
+  Running TypeScript ...
+Failed to type check.
+
+./src/app/tracking/page.tsx:122:32
+Type error: Property 'status' does not exist on type '{}'.
+
+  [90m120 |[0m       
+  [90m121 |[0m       [90m// Map Terminal Africa tracking response to TrackingInfo type[0m
+[31m[1m>[0m [90m122 |[0m       [36mif[0m (response && response.status) {
+  [90m    |[0m                                [31m[1m^[0m
+  [90m123 |[0m         [36mconst[0m data = response.data;
+  [90m124 |[0m         [36mconst[0m mappedData: [33mTrackingInfo[0m = {
+  [90m125 |[0m           tracking_number: data.tracking_number,
+Next.js build worker exited with code: 1 and signal: null

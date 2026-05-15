@@ -1,107 +1,109 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { CheckCircle, AlertCircle, Truck, MessageCircle, CreditCard, Globe } from 'lucide-react';
 import { useCartStore } from '@/lib/store';
-import { useAuthStore } from '@/lib/auth-store';
-import { formatCurrency, whatsappConfig, apiConfig } from '@/lib/config';
 import { shippingApi, checkoutApi } from '@/lib/api';
+import { formatCurrency, siteConfig, whatsappConfig } from '@/lib/config';
+import { 
+  Truck, 
+  CreditCard, 
+  MessageCircle, 
+  CheckCircle,
+  ChevronRight,
+  MapPin,
+  Package
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input, Select, Textarea } from '@/components/ui/input';
+import { Input } from '@/components/ui/input';
+import { Select } from '@/components/ui/select';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
-import { ShippingAddress, ShippingRate } from '@/types';
+
+type Step = 'shipping' | 'payment' | 'confirmation';
+
+interface ShippingRate {
+  id: string;
+  carrier: string;
+  service: string;
+  price: number;
+  currency: 'NGN' | 'USD';
+  estimated_days: number;
+}
 
 const nigerianStates = [
-  { value: 'lagos', label: 'Lagos' },
-  { value: 'abuja', label: 'Abuja (FCT)' },
-  { value: 'rivers', label: 'Rivers' },
-  { value: 'kano', label: 'Kano' },
-  { value: 'oyo', label: 'Oyo' },
-  { value: 'kaduna', label: 'Kaduna' },
-  { value: 'enugu', label: 'Enugu' },
-  { value: 'delta', label: 'Delta' },
-  { value: 'imo', label: 'Imo' },
-  { value: 'abia', label: 'Abia' },
-  { value: 'anambra', label: 'Anambra' },
-  { value: 'ondo', label: 'Ondo' },
-  { value: 'osun', label: 'Osun' },
-  { value: 'ekiti', label: 'Ekiti' },
-  { value: 'oyo', label: 'Oyo' },
-  { value: 'other', label: 'Other States' },
+  { label: 'Lagos', value: 'Lagos' },
+  { label: 'Abuja', value: 'Abuja' },
+  { label: 'Rivers', value: 'Rivers' },
+  { label: 'Oyo', value: 'Oyo' },
+  // Add more states as needed
 ];
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { items, currency, getSubtotal, getTotal, setShippingAddress, setShippingRate, clearCart } = useCartStore();
-  const { isAuthenticated, user } = useAuthStore();
+  const { items, getSubtotal, setShippingRate, clearCart } = useCartStore();
   
-  const [step, setStep] = useState<'shipping' | 'payment' | 'confirmation'>('shipping');
-  const [isLocal, setIsLocal] = useState(true);
+  const [step, setStep] = useState<Step>('shipping');
   const [isLoading, setIsLoading] = useState(false);
   const [shippingRates, setShippingRates] = useState<ShippingRate[]>([]);
   const [selectedRate, setSelectedRate] = useState<ShippingRate | null>(null);
   
-  const [formData, setFormData] = useState<ShippingAddress>({
-    first_name: user?.full_name?.split(' ')[0] || '',
-    last_name: user?.full_name?.split(' ').slice(1).join(' ') || '',
+  const [formData, setShippingAddress] = useState({
+    first_name: '',
+    last_name: '',
+    email: '',
+    phone_number: '',
     address_line1: '',
     address_line2: '',
     city: '',
     state: '',
-    country: 'Nigeria',
-    phone_number: user?.email || '',
-    email: user?.email || '',
+    country: 'Nigeria', // Default
   });
 
-  const [errors, setErrors] = useState<Partial<Record<keyof ShippingAddress, string>>>({});
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
-  useEffect(() => {
-    // Check stored locale
-    const storedLocale = typeof window !== 'undefined' ? localStorage.getItem('king-jesus-locale') : null;
-    if (storedLocale === 'international') {
-      setIsLocal(false);
-    }
-  }, []);
+  const isLocal = formData.country === 'Nigeria';
+  const currency = isLocal ? 'NGN' : 'USD';
 
   // Redirect if cart is empty
   useEffect(() => {
-    if (items.length === 0 && step === 'shipping') {
+    if (items.length === 0 && step !== 'confirmation') {
       router.push('/cart');
     }
   }, [items, step, router]);
 
-  const validateForm = () => {
-    const newErrors: Partial<Record<keyof ShippingAddress, string>> = {};
-    
-    if (!formData.first_name.trim()) newErrors.first_name = 'First name is required';
-    if (!formData.last_name.trim()) newErrors.last_name = 'Last name is required';
-    if (!formData.address_line1.trim()) newErrors.address_line1 = 'Address is required';
-    if (!formData.city.trim()) newErrors.city = 'City is required';
-    if (!formData.state.trim()) newErrors.state = 'State is required';
-    if (!formData.phone_number.trim()) newErrors.phone_number = 'Phone number is required';
-    if (!formData.email?.trim()) newErrors.email = 'Email is required';
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setShippingAddress(prev => ({ ...prev, [name]: value }));
+    if (errors[name]) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors[name];
+        return newErrors;
+      });
+    }
+  };
+
+  const validateShipping = () => {
+    const newErrors: Record<string, string> = {};
+    if (!formData.first_name) newErrors.first_name = 'Required';
+    if (!formData.last_name) newErrors.last_name = 'Required';
+    if (!formData.email) newErrors.email = 'Required';
+    if (!formData.phone_number) newErrors.phone_number = 'Required';
+    if (!formData.address_line1) newErrors.address_line1 = 'Required';
+    if (!formData.city) newErrors.city = 'Required';
+    if (!formData.state) newErrors.state = 'Required';
     
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-    if (errors[name as keyof ShippingAddress]) {
-      setErrors((prev) => ({ ...prev, [name]: undefined }));
-    }
-  };
-
   const handleCalculateShipping = async () => {
-    if (!validateForm()) return;
+    if (!validateShipping()) return;
     
     setIsLoading(true);
-    setShippingAddress(formData);
     
     try {
-      const response = await shippingApi.calculateRates({
+      const response = (await shippingApi.calculateRates({
         address: {
           city: formData.city,
           state: formData.state,
@@ -111,18 +113,11 @@ export default function CheckoutPage() {
           product_id: item.product.id,
           quantity: item.quantity,
         })),
-      });
+      })) as any;
       
       // Map Terminal Africa rates to ShippingRate type
       // The response from backend is what Terminal Africa returns
-      const rates: ShippingRate[] = response.data.map((rate: { 
-        rate_id: string; 
-        carrier_name: string; 
-        service_name: string; 
-        amount: string; 
-        currency: 'NGN' | 'USD'; 
-        delivery_time?: number 
-      }) => ({
+      const rates: ShippingRate[] = response.data.map((rate: any) => ({
         id: rate.rate_id,
         carrier: rate.carrier_name,
         service: rate.service_name,
@@ -137,7 +132,7 @@ export default function CheckoutPage() {
         setShippingRate(rates[0]);
       }
       setStep('payment');
-    } catch (error: unknown) {
+    } catch (error: any) {
       console.error('Shipping calculation error:', error);
       alert(error.message || 'Failed to calculate shipping rates. Please try again.');
     } finally {
@@ -159,7 +154,7 @@ export default function CheckoutPage() {
     setIsLoading(true);
     
     try {
-      const response = await checkoutApi.createOrder({
+      const response = (await checkoutApi.createOrder({
         items: items.map(item => ({
           product_id: item.product.id,
           quantity: item.quantity,
@@ -173,7 +168,7 @@ export default function CheckoutPage() {
         payment_method: 'Paystack',
         currency: currency,
         total_amount: total,
-      });
+      })) as any;
       
       const { payment_data } = response;
       if (payment_data && payment_data.data && payment_data.data.authorization_url) {
@@ -182,7 +177,7 @@ export default function CheckoutPage() {
       } else {
         throw new Error('Could not initialize Paystack payment');
       }
-    } catch (error: unknown) {
+    } catch (error: any) {
       console.error('Paystack error:', error);
       alert(error.message || 'Failed to initialize payment. Please try again.');
     } finally {
@@ -194,7 +189,7 @@ export default function CheckoutPage() {
     setIsLoading(true);
     
     try {
-      const response = await checkoutApi.createWhatsAppOrder({
+      const response = (await checkoutApi.createWhatsAppOrder({
         items: items.map(item => ({
           product_id: item.product.id,
           quantity: item.quantity,
@@ -206,7 +201,7 @@ export default function CheckoutPage() {
         },
         currency: currency,
         total_amount: total,
-      });
+      })) as any;
       
       const { whatsapp_link } = response;
       
@@ -216,7 +211,7 @@ export default function CheckoutPage() {
       // Move to confirmation
       setStep('confirmation');
       clearCart();
-    } catch (error: unknown) {
+    } catch (error: any) {
       console.error('WhatsApp order error:', error);
       alert(error.message || 'Failed to create WhatsApp order. Please try again.');
     } finally {
@@ -233,7 +228,7 @@ export default function CheckoutPage() {
     setIsLoading(true);
     
     try {
-      const response = await checkoutApi.createOrder({
+      const response = (await checkoutApi.createOrder({
         items: items.map(item => ({
           product_id: item.product.id,
           quantity: item.quantity,
@@ -247,7 +242,7 @@ export default function CheckoutPage() {
         payment_method: 'Stripe',
         currency: currency,
         total_amount: total,
-      });
+      })) as any;
       
       // In a real app with Stripe Elements, we would use the client_secret here
       // For this final integration, we'll simulate the successful redirect/confirmation
@@ -259,7 +254,7 @@ export default function CheckoutPage() {
       } else {
         throw new Error('Could not initialize Stripe payment');
       }
-    } catch (error: unknown) {
+    } catch (error: any) {
       console.error('Stripe error:', error);
       alert(error.message || 'Failed to initialize Stripe payment. Please try again.');
     } finally {
@@ -271,7 +266,7 @@ export default function CheckoutPage() {
   const shippingCost = selectedRate?.price || 0;
   const total = subtotal + shippingCost;
 
-  if (items.length === 0) {
+  if (items.length === 0 && step !== 'confirmation') {
     return null;
   }
 
