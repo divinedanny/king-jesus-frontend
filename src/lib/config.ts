@@ -84,7 +84,7 @@ export const siteConfig = {
 
 // API configuration - points to Django backend
 export const apiConfig = {
-  baseUrl: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000',
+  baseUrl: process.env.NEXT_PUBLIC_API_URL || 'https://king-jesus-backend.onrender.com',
   endpoints: {
     // Products & Categories (from core/urls.py router)
     products: '/api/products/',
