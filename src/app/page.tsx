@@ -1,13 +1,20 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import Link from 'next/link';
 import { ArrowRight, Shield, Truck, Headphones, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { ProductGrid, mockProducts } from '@/components/product/product-grid';
+import { ProductGrid } from '@/components/product/product-grid';
+import { useProductStore } from '@/lib/product-store';
 
 export default function HomePage() {
-  const featuredProducts = mockProducts.slice(0, 3);
+  const { products, fetchProducts, isLoading } = useProductStore();
+
+  useEffect(() => {
+    fetchProducts({ page: 1 });
+  }, [fetchProducts]);
+
+  const featuredProducts = products.slice(0, 3);
 
   return (
     <div className="flex flex-col">
@@ -41,7 +48,7 @@ export default function HomePage() {
             </div>
             
             <div className="relative">
-              <div className="aspect-square bg-gradient-to-br from-primary-100 to-secondary-100 rounded-3xl flex items-center justify-center">
+              <div className="aspect-square bg-gradient-to-br from-primary-100 to-secondary-100 rounded-3xl flex items-center justify-center overflow-hidden shadow-2xl">
                 <div className="text-9xl">✝️</div>
               </div>
               <div className="absolute -bottom-4 -left-4 bg-white rounded-xl shadow-lg p-4 animate-fadeIn">
@@ -106,7 +113,7 @@ export default function HomePage() {
               </Button>
             </Link>
           </div>
-          <ProductGrid products={featuredProducts} columns={3} />
+          <ProductGrid products={featuredProducts} loading={isLoading} columns={3} />
         </div>
       </section>
 
