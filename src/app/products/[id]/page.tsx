@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { ArrowLeft, ShoppingCart, Minus, Plus, Check, Heart, Star } from 'lucide-react';
@@ -29,25 +29,16 @@ export default function ProductDetailPage() {
 
   const productId = params.id as string;
 
-  useEffect(() => {
-    if (productId) {
-      fetchProductById(productId);
-      fetchReviews();
-      checkWishlist();
-      clearError();
-    }
-  }, [productId, isAuthenticated]);
-
-  const fetchReviews = async () => {
+  const fetchReviews = useCallback(async () => {
     try {
       const data = await reviewsApi.getByProduct(productId);
       setReviews(data);
     } catch (err) {
       console.error('Failed to fetch reviews', err);
     }
-  };
+  }, [productId]);
 
-  const checkWishlist = async () => {
+  const checkWishlist = useCallback(async () => {
     if (!isAuthenticated) return;
     try {
       const wishlists = await wishlistApi.get();
@@ -57,7 +48,16 @@ export default function ProductDetailPage() {
     } catch (err) {
       console.error('Failed to check wishlist', err);
     }
-  };
+  }, [productId, isAuthenticated]);
+
+  useEffect(() => {
+    if (productId) {
+      fetchProductById(productId);
+      fetchReviews();
+      checkWishlist();
+      clearError();
+    }
+  }, [productId, isAuthenticated, fetchProductById, fetchReviews, checkWishlist, clearError]);
 
   const toggleWishlist = async () => {
     if (!isAuthenticated) {

@@ -1,5 +1,5 @@
 import { apiConfig } from './config';
-import { Product, Category, User, Review, Wishlist } from '@/types';
+import { Product, Category, User, Review, Wishlist, Order } from '@/types';
 
 class ApiError extends Error {
   status: number;
@@ -127,7 +127,7 @@ export const shippingApi = {
       product_id: string;
       quantity: number;
     }>;
-  }): Promise<any> => {
+  }): Promise<unknown> => {
     return fetchApi(apiConfig.endpoints.calculateShipping, {
       method: 'POST',
       body: JSON.stringify(params),
@@ -154,7 +154,7 @@ export const checkoutApi = {
     payment_method: 'Paystack' | 'Stripe';
     currency: string;
     total_amount: number;
-  }): Promise<any> => {
+  }): Promise<unknown> => {
     return fetchApi(apiConfig.endpoints.createOrder, {
       method: 'POST',
       body: JSON.stringify(params),
@@ -176,7 +176,7 @@ export const checkoutApi = {
     };
     currency: string;
     total_amount: number;
-  }): Promise<any> => {
+  }): Promise<unknown> => {
     return fetchApi(apiConfig.endpoints.whatsappOrder, {
       method: 'POST',
       body: JSON.stringify(params),
@@ -186,17 +186,17 @@ export const checkoutApi = {
 
 // Orders API
 export const ordersApi = {
-  getAll: async (): Promise<any[]> => {
+  getAll: async (): Promise<Order[]> => {
     return fetchApi(apiConfig.endpoints.orders);
   },
-  getById: async (id: string): Promise<any> => {
+  getById: async (id: string): Promise<Order> => {
     return fetchApi(`${apiConfig.endpoints.orders}${id}/`);
   },
 };
 
 // Tracking API
 export const trackingApi = {
-  getStatus: async (trackingNumber: string): Promise<any> => {
+  getStatus: async (trackingNumber: string): Promise<unknown> => {
     return fetchApi(apiConfig.endpoints.tracking(trackingNumber));
   },
 };

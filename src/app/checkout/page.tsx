@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { CheckCircle, AlertCircle, Truck, MessageCircle, CreditCard, Globe } from 'lucide-react';
 import { useCartStore } from '@/lib/store';
@@ -58,8 +58,10 @@ export default function CheckoutPage() {
 
   useEffect(() => {
     // Check stored locale
-    const storedLocale = localStorage.getItem('king-jesus-locale');
-    setIsLocal(storedLocale !== 'international');
+    const storedLocale = typeof window !== 'undefined' ? localStorage.getItem('king-jesus-locale') : null;
+    if (storedLocale === 'international') {
+      setIsLocal(false);
+    }
   }, []);
 
   // Redirect if cart is empty
@@ -113,7 +115,14 @@ export default function CheckoutPage() {
       
       // Map Terminal Africa rates to ShippingRate type
       // The response from backend is what Terminal Africa returns
-      const rates: ShippingRate[] = response.data.map((rate: any) => ({
+      const rates: ShippingRate[] = response.data.map((rate: { 
+        rate_id: string; 
+        carrier_name: string; 
+        service_name: string; 
+        amount: string; 
+        currency: 'NGN' | 'USD'; 
+        delivery_time?: number 
+      }) => ({
         id: rate.rate_id,
         carrier: rate.carrier_name,
         service: rate.service_name,
@@ -128,7 +137,7 @@ export default function CheckoutPage() {
         setShippingRate(rates[0]);
       }
       setStep('payment');
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Shipping calculation error:', error);
       alert(error.message || 'Failed to calculate shipping rates. Please try again.');
     } finally {
@@ -169,11 +178,11 @@ export default function CheckoutPage() {
       const { payment_data } = response;
       if (payment_data && payment_data.data && payment_data.data.authorization_url) {
         // Redirect to Paystack checkout
-        window.location.href = payment_data.data.authorization_url;
+        window.location.assign(payment_data.data.authorization_url);
       } else {
         throw new Error('Could not initialize Paystack payment');
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Paystack error:', error);
       alert(error.message || 'Failed to initialize payment. Please try again.');
     } finally {
@@ -207,7 +216,7 @@ export default function CheckoutPage() {
       // Move to confirmation
       setStep('confirmation');
       clearCart();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('WhatsApp order error:', error);
       alert(error.message || 'Failed to create WhatsApp order. Please try again.');
     } finally {
@@ -250,7 +259,7 @@ export default function CheckoutPage() {
       } else {
         throw new Error('Could not initialize Stripe payment');
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Stripe error:', error);
       alert(error.message || 'Failed to initialize Stripe payment. Please try again.');
     } finally {

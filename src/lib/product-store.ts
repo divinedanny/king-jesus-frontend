@@ -45,8 +45,8 @@ export const useProductStore = create<ProductState>((set, get) => ({
       const { searchQuery, selectedCategory } = get();
       
       const response = await productsApi.getAll({
-        search: params?.search ?? searchQuery || undefined,
-        category: params?.category ?? selectedCategory !== 'all' ? selectedCategory : undefined,
+        search: (params?.search ?? searchQuery) || undefined,
+        category: params?.category ?? (selectedCategory !== 'all' ? selectedCategory : undefined),
         page: params?.page,
       });
       

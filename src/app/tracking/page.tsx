@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Search, Package, Truck, CheckCircle, Clock, MapPin, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -110,21 +110,7 @@ export default function TrackingPage() {
   const [trackingData, setTrackingData] = useState<TrackingInfo | null>(null);
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    const number = searchParams.get('number');
-    if (number) {
-      setTrackingNumber(number);
-      performTrack(number);
-    }
-  }, [searchParams]);
-
-  const handleTrack = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!trackingNumber.trim()) return;
-    performTrack(trackingNumber.trim());
-  };
-
-  const performTrack = async (number: string) => {
+  const performTrack = useCallback(async (number: string) => {
     setIsLoading(true);
     setError('');
     setTrackingData(null);
@@ -133,7 +119,6 @@ export default function TrackingPage() {
       const response = await trackingApi.getStatus(number);
       
       // Map Terminal Africa tracking response to TrackingInfo type
-      // Based on Terminal Africa API docs, tracking response has a data field
       if (response && response.status) {
         const data = response.data;
         const mappedData: TrackingInfo = {
@@ -142,7 +127,7 @@ export default function TrackingPage() {
           carrier: data.carrier_name || 'Terminal Africa',
           status: data.status,
           estimated_delivery: data.estimated_delivery_date,
-          events: (data.events || []).map((event: any, index: number) => ({
+          events: (data.events || []).map((event: unknown, index: number) => ({
             id: index.toString(),
             status: event.status,
             description: event.description,
@@ -152,18 +137,16 @@ export default function TrackingPage() {
         };
         setTrackingData(mappedData);
       } else {
-        // Fallback to mock data for demo if API fails or return no results
-        const mockData = mockTrackingData[trackingNumber.toUpperCase()];
+        const mockData = mockTrackingData[number.toUpperCase()];
         if (mockData) {
           setTrackingData(mockData);
         } else {
           setError('No tracking information found for this number. Please check and try again.');
         }
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Tracking error:', error);
-      // Fallback to mock data for demo
-      const mockData = mockTrackingData[trackingNumber.toUpperCase()];
+      const mockData = mockTrackingData[number.toUpperCase()];
       if (mockData) {
         setTrackingData(mockData);
       } else {
@@ -172,6 +155,20 @@ export default function TrackingPage() {
     } finally {
       setIsLoading(false);
     }
+  }, []);
+
+  useEffect(() => {
+    const number = searchParams.get('number');
+    if (number) {
+      setTrackingNumber(number);
+      performTrack(number);
+    }
+  }, [searchParams, performTrack]);
+
+  const handleTrack = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!trackingNumber.trim()) return;
+    performTrack(trackingNumber.trim());
   };
 
   const formatDate = (dateString: string) => {

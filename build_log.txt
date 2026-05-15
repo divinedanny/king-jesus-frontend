@@ -1,0 +1,23 @@
+
+> king-jesus-collection@0.1.0 build
+> next build
+
+▲ Next.js 16.2.6 (Turbopack)
+- Environments: .env.local
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 5.4s
+  Running TypeScript ...
+Failed to type check.
+
+./src/lib/auth-store.ts:55:11
+Type error: Cannot find name 'setUser'.
+
+  [90m53 |[0m             localStorage.setItem([32m'auth_token'[0m, response.token);
+  [90m54 |[0m           }
+[31m[1m>[0m [90m55 |[0m           setUser(response.user);
+  [90m   |[0m           [31m[1m^[0m
+  [90m56 |[0m         } [36mcatch[0m (error) {
+  [90m57 |[0m           setError(error [36minstanceof[0m [33mError[0m ? error.message : [32m'Login failed'[0m);
+  [90m58 |[0m           [36mthrow[0m error;
+Next.js build worker exited with code: 1 and signal: null

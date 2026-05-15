@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { User, Package, MapPin, LogOut, ChevronRight, ShoppingBag } from 'lucide-react';
 import { useAuthStore } from '@/lib/auth-store';
@@ -16,23 +16,9 @@ export default function AccountPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    if (!authLoading && !isAuthenticated) {
-      router.push('/auth');
-    }
-  }, [isAuthenticated, authLoading, router]);
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      fetchOrders();
-    }
-  }, [isAuthenticated]);
-
-  const fetchOrders = async () => {
+  const fetchOrders = useCallback(async () => {
     try {
       const data = await ordersApi.getAll();
-      // Handle Django DRF pagination if necessary, but backend-engineer used simple list usually or {results: []}
-      // Let's assume it returns a list or an object with results
       if (Array.isArray(data)) {
         setOrders(data);
       } else if ((data as any).results) {
@@ -43,7 +29,19 @@ export default function AccountPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    if (!authLoading && !isAuthenticated) {
+      router.push('/auth');
+    }
+  }, [isAuthenticated, authLoading, router]);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchOrders();
+    }
+  }, [isAuthenticated, fetchOrders]);
 
   const handleLogout = async () => {
     await logout();
