@@ -3,42 +3,48 @@
 import React from 'react';
 import Link from 'next/link';
 import { Phone, Mail, MapPin, Clock } from 'lucide-react';
+import { siteConfig, whatsappConfig } from '@/lib/config';
 
 export function Footer() {
   return (
-    <footer className="bg-gray-900 text-gray-300">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+    <footer className="bg-black text-gray-400 border-t border-white/5">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Company Info */}
-          <div>
-            <h3 className="text-xl font-bold text-white mb-4">King Jesus Collection</h3>
-            <p className="text-sm text-gray-400 mb-4">
-              Premium faith-based products for the modern Christian. Quality merchandise that speaks to your faith.
+          <div className="space-y-6">
+            <h3 className="text-xl font-bold text-white uppercase tracking-tighter">
+              {siteConfig.name}
+            </h3>
+            <p className="text-sm leading-relaxed">
+              {siteConfig.description}
             </p>
+            <div className="flex gap-4">
+              {/* Social icons could go here */}
+            </div>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h4 className="text-lg font-semibold text-white mb-4">Quick Links</h4>
-            <ul className="space-y-2">
+            <h4 className="text-xs font-bold text-white uppercase tracking-[0.2em] mb-8">Navigation</h4>
+            <ul className="space-y-4 text-sm">
               <li>
-                <Link href="/products" className="text-gray-400 hover:text-white transition-colors">
-                  Products
+                <Link href="/products" className="hover:text-primary-500 transition-colors">
+                  Catalog
                 </Link>
               </li>
               <li>
-                <Link href="/cart" className="text-gray-400 hover:text-white transition-colors">
+                <Link href="/cart" className="hover:text-primary-500 transition-colors">
                   Cart
                 </Link>
               </li>
               <li>
-                <Link href="/tracking" className="text-gray-400 hover:text-white transition-colors">
+                <Link href="/tracking" className="hover:text-primary-500 transition-colors">
                   Track Order
                 </Link>
               </li>
               <li>
-                <Link href="/auth" className="text-gray-400 hover:text-white transition-colors">
-                  My Account
+                <Link href="/auth" className="hover:text-primary-500 transition-colors">
+                  Account
                 </Link>
               </li>
             </ul>
@@ -46,18 +52,18 @@ export function Footer() {
 
           {/* Customer Service */}
           <div>
-            <h4 className="text-lg font-semibold text-white mb-4">Customer Service</h4>
-            <ul className="space-y-2">
-              <li className="flex items-center gap-2 text-gray-400">
-                <Phone className="h-4 w-4" />
-                <span>+234 704 949 7394</span>
+            <h4 className="text-xs font-bold text-white uppercase tracking-[0.2em] mb-8">Support</h4>
+            <ul className="space-y-4 text-sm">
+              <li className="flex items-center gap-3">
+                <Phone className="h-4 w-4 text-primary-500" />
+                <span>+{whatsappConfig.phoneNumber}</span>
               </li>
-              <li className="flex items-center gap-2 text-gray-400">
-                <Mail className="h-4 w-4" />
+              <li className="flex items-center gap-3">
+                <Mail className="h-4 w-4 text-primary-500" />
                 <span>support@kingjesuscollection.com</span>
               </li>
-              <li className="flex items-start gap-2 text-gray-400">
-                <Clock className="h-4 w-4 mt-1 flex-shrink-0" />
+              <li className="flex items-start gap-3">
+                <Clock className="h-4 w-4 text-primary-500 mt-0.5" />
                 <span>Mon-Fri: 9AM - 6PM WAT</span>
               </li>
             </ul>
@@ -65,30 +71,30 @@ export function Footer() {
 
           {/* Location */}
           <div>
-            <h4 className="text-lg font-semibold text-white mb-4">Visit Us</h4>
-            <div className="flex items-start gap-2 text-gray-400">
-              <MapPin className="h-4 w-4 mt-1 flex-shrink-0" />
+            <h4 className="text-xs font-bold text-white uppercase tracking-[0.2em] mb-8">Visit</h4>
+            <div className="flex items-start gap-3 text-sm">
+              <MapPin className="h-4 w-4 text-primary-500 mt-0.5" />
               <span>Lagos, Nigeria</span>
             </div>
-            <div className="mt-4">
-              <p className="text-sm text-gray-500">
-                We ship worldwide via Terminal Africa
+            <div className="mt-8 pt-8 border-t border-white/5">
+              <p className="text-[10px] uppercase tracking-widest text-gray-600">
+                Fulfillment by Terminal Africa
               </p>
             </div>
           </div>
         </div>
 
-        <div className="border-t border-gray-800 mt-8 pt-8">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-sm text-gray-500">
-              © {new Date().getFullYear()} King Jesus Collection. All rights reserved.
+        <div className="border-t border-white/5 mt-16 pt-8">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+            <p className="text-[10px] uppercase tracking-widest font-medium">
+              © {new Date().getFullYear()} {siteConfig.name}. Premium Faithwear.
             </p>
-            <div className="flex gap-6 text-sm">
-              <Link href="/privacy" className="text-gray-400 hover:text-white transition-colors">
-                Privacy Policy
+            <div className="flex gap-8 text-[10px] uppercase tracking-widest font-medium">
+              <Link href="/privacy" className="hover:text-white transition-colors">
+                Privacy
               </Link>
-              <Link href="/terms" className="text-gray-400 hover:text-white transition-colors">
-                Terms of Service
+              <Link href="/terms" className="hover:text-white transition-colors">
+                Terms
               </Link>
             </div>
           </div>

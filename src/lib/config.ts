@@ -84,6 +84,16 @@ export const apiConfig = {
     products: '/api/products/',
     productDetail: (id: string) => `/api/products/${id}/`,
     categories: '/api/categories/',
+    // Inventory & Stores
+    stores: '/api/stores/',
+    inventory: '/api/inventory/',
+    lowStockAlerts: '/api/inventory/low_stock_alerts/',
+    staff: '/api/staff/',
+    stockTransfers: '/api/stock-transfers/',
+    salesAnalytics: '/api/analytics/sales/',
+    barcodeImage: (id: string) => `/api/products/${id}/barcode_image/`,
+    qrcodeImage: (id: string) => `/api/products/${id}/qrcode_image/`,
+    productByBarcode: '/api/pos/product-by-barcode/',
     
     // Checkout (from core/urls.py)
     calculateShipping: '/api/checkout/calculate-shipping/',

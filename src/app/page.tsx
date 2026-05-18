@@ -1,148 +1,153 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { ArrowRight, Shield, Truck, Headphones, Star } from 'lucide-react';
+import { ArrowRight, ShoppingCart, Truck, Star, Headphones, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { ProductGrid, mockProducts } from '@/components/product/product-grid';
+import { ProductGrid } from '@/components/product/product-grid';
+import { productsApi } from '@/lib/api';
+import { Product } from '@/types';
+import { siteConfig } from '@/lib/config';
 
-export default function HomePage() {
-  const featuredProducts = mockProducts.slice(0, 3);
+export default function Home() {
+  const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadProducts() {
+      try {
+        const response = await productsApi.getAll();
+        // Take first 3-4 products as featured
+        setFeaturedProducts(response.results.slice(0, 4));
+      } catch (error) {
+        console.error('Failed to load products', error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadProducts();
+  }, []);
 
   return (
-    <div className="flex flex-col">
+    <div className="bg-white">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-primary-50 via-white to-secondary-50 py-20 lg:py-32">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="space-y-8 animate-fadeIn">
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
-                Express Your Faith with{' '}
-                <span className="bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent">
-                  Premium Products
-                </span>
-              </h1>
-              <p className="text-lg md:text-xl text-gray-600 max-w-xl">
-                Discover our curated collection of faith-based merchandise. 
-                From apparel to home decor, find products that inspire and uplift.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Link href="/products">
-                  <Button size="lg" icon={ArrowRight} iconPosition="right">
-                    Shop Now
-                  </Button>
-                </Link>
-                <Link href="/tracking">
-                  <Button variant="outline" size="lg">
-                    Track Your Order
-                  </Button>
-                </Link>
-              </div>
+      <section className="relative h-[85vh] bg-black overflow-hidden flex items-center">
+        {/* Abstract Background pattern */}
+        <div className="absolute inset-0 opacity-20 pointer-events-none">
+          <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-primary-900/40 via-black to-black"></div>
+          <div className="grid grid-cols-8 h-full w-full">
+             {Array.from({length: 64}).map((_, i) => (
+               <div key={i} className="border-[0.5px] border-white/5"></div>
+             ))}
+          </div>
+        </div>
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
+          <div className="max-w-3xl">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-500/10 border border-primary-500/20 text-primary-500 text-[10px] font-bold uppercase tracking-[0.2em] mb-6">
+              New Arrival 2024
             </div>
-            
-            <div className="relative">
-              <div className="aspect-square bg-gradient-to-br from-primary-100 to-secondary-100 rounded-3xl flex items-center justify-center">
-                <div className="text-9xl">✝️</div>
-              </div>
-              <div className="absolute -bottom-4 -left-4 bg-white rounded-xl shadow-lg p-4 animate-fadeIn">
-                <div className="flex items-center gap-2">
-                  <Star className="h-5 w-5 text-yellow-500 fill-yellow-500" />
-                  <span className="font-semibold">4.9/5 Rating</span>
-                </div>
-                <p className="text-sm text-gray-500">from 2,000+ customers</p>
-              </div>
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-white tracking-tighter leading-[0.9] mb-8">
+              WEAR YOUR <br />
+              <span className="text-primary-500">FAITH</span> LOUD.
+            </h1>
+            <p className="text-lg text-gray-400 mb-10 max-w-xl leading-relaxed uppercase tracking-wide">
+              {siteConfig.description}
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Link href="/products">
+                <Button size="lg" className="w-full sm:w-auto h-14 px-10 text-sm uppercase tracking-widest font-bold">
+                  Explore Catalog
+                </Button>
+              </Link>
+              <Link href="/tracking">
+                <Button variant="outline" size="lg" className="w-full sm:w-auto h-14 px-10 text-sm uppercase tracking-widest font-bold border-white/20 text-white hover:bg-white hover:text-black hover:border-white">
+                  Track Order
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-16 bg-white border-y border-gray-100">
+      {/* Features Bar */}
+      <section className="py-12 border-b border-gray-100 bg-white relative z-20 -mt-8 mx-4 sm:mx-8 rounded-xl shadow-xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            <div className="flex flex-col items-center text-center gap-3">
-              <div className="p-3 bg-primary-50 rounded-full">
-                <Shield className="h-6 w-6 text-primary-600" />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+            <div className="flex items-center gap-6 group">
+              <div className="w-14 h-14 flex items-center justify-center rounded-2xl bg-black text-primary-500 transition-transform group-hover:scale-110">
+                <Truck className="h-6 w-6" />
               </div>
-              <h3 className="font-semibold text-gray-900">Secure Payment</h3>
-              <p className="text-sm text-gray-500">100% secure transactions</p>
+              <div>
+                <h3 className="font-bold text-black uppercase tracking-widest text-xs mb-1">Global Shipping</h3>
+                <p className="text-sm text-gray-500">Fast delivery via Terminal Africa</p>
+              </div>
             </div>
-            <div className="flex flex-col items-center text-center gap-3">
-              <div className="p-3 bg-secondary-50 rounded-full">
-                <Truck className="h-6 w-6 text-secondary-600" />
+            <div className="flex items-center gap-6 group border-y md:border-y-0 md:border-x border-gray-100 py-8 md:py-0 md:px-12">
+              <div className="w-14 h-14 flex items-center justify-center rounded-2xl bg-black text-primary-500 transition-transform group-hover:scale-110">
+                <Headphones className="h-6 w-6" />
               </div>
-              <h3 className="font-semibold text-gray-900">Fast Shipping</h3>
-              <p className="text-sm text-gray-500">Via Terminal Africa</p>
+              <div>
+                <h3 className="font-bold text-black uppercase tracking-widest text-xs mb-1">Expert Support</h3>
+                <p className="text-sm text-gray-500">Dedicated assistance via WhatsApp</p>
+              </div>
             </div>
-            <div className="flex flex-col items-center text-center gap-3">
-              <div className="p-3 bg-gold-50 rounded-full">
-                <Headphones className="h-6 w-6 text-gold-600" />
+            <div className="flex items-center gap-6 group">
+              <div className="w-14 h-14 flex items-center justify-center rounded-2xl bg-black text-primary-500 transition-transform group-hover:scale-110">
+                <Star className="h-6 w-6" />
               </div>
-              <h3 className="font-semibold text-gray-900">24/7 Support</h3>
-              <p className="text-sm text-gray-500">WhatsApp or Email</p>
-            </div>
-            <div className="flex flex-col items-center text-center gap-3">
-              <div className="p-3 bg-primary-50 rounded-full">
-                <Star className="h-6 w-6 text-primary-600" />
+              <div>
+                <h3 className="font-bold text-black uppercase tracking-widest text-xs mb-1">Premium Quality</h3>
+                <p className="text-sm text-gray-500">Curated materials & design</p>
               </div>
-              <h3 className="font-semibold text-gray-900">Quality Products</h3>
-              <p className="text-sm text-gray-500">Premium materials</p>
             </div>
           </div>
         </div>
       </section>
 
       {/* Featured Products */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between mb-8">
-            <div>
-              <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Featured Products</h2>
-              <p className="text-gray-600 mt-1">Our most popular items</p>
+          <div className="flex flex-col md:flex-row items-end justify-between mb-16 gap-6">
+            <div className="max-w-2xl">
+              <h2 className="text-4xl font-black text-black tracking-tighter uppercase mb-4">Essentials</h2>
+              <div className="h-1 w-20 bg-primary-500"></div>
             </div>
-            <Link href="/products">
-              <Button variant="outline" icon={ArrowRight} iconPosition="right">
-                View All
-              </Button>
+            <Link href="/products" className="group flex items-center gap-2 text-xs font-black uppercase tracking-widest">
+              View Entire Catalog
+              <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             </Link>
           </div>
-          <ProductGrid products={featuredProducts} columns={3} />
+          
+          {isLoading ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              {[1,2,3,4].map(i => (
+                <div key={i} className="aspect-[4/5] bg-gray-100 animate-pulse rounded-2xl"></div>
+              ))}
+            </div>
+          ) : (
+            <ProductGrid products={featuredProducts} columns={4} />
+          )}
         </div>
       </section>
 
-      {/* Local vs International CTA */}
-      <section className="py-16 bg-white">
+      {/* Collection CTA */}
+      <section className="py-24 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-2 gap-8">
-            {/* Local CTA */}
-            <div className="bg-gradient-to-br from-primary-50 to-primary-100 rounded-2xl p-8">
-              <div className="inline-flex items-center gap-2 mb-4">
-                <span className="text-2xl">🇳🇬</span>
-                <span className="text-sm font-semibold text-primary-700">Nigerian Customers</span>
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">Pay with Paystack</h3>
-              <p className="text-gray-600 mb-6">
-                Pay securely with your Nigerian bank account, card, or USSD. 
-                Or order directly via WhatsApp for personalized service.
-              </p>
-              <Link href="/products">
-                <Button variant="primary">Shop Now</Button>
-              </Link>
+          <div className="relative rounded-3xl bg-black overflow-hidden p-12 md:p-24 flex items-center justify-center text-center">
+            <div className="absolute inset-0 opacity-30">
+               <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1556905055-8f358a7a47b2?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center"></div>
+               <div className="absolute inset-0 bg-black/60"></div>
             </div>
-
-            {/* International CTA */}
-            <div className="bg-gradient-to-br from-secondary-50 to-secondary-100 rounded-2xl p-8">
-              <div className="inline-flex items-center gap-2 mb-4">
-                <span className="text-2xl">🌍</span>
-                <span className="text-sm font-semibold text-secondary-700">International Customers</span>
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">Pay with Stripe</h3>
-              <p className="text-gray-600 mb-6">
-                International checkout with your credit card via Stripe. 
-                We ship worldwide via Terminal Africa.
-              </p>
+            <div className="relative z-10 max-w-2xl">
+              <h2 className="text-4xl md:text-6xl font-black text-white tracking-tighter uppercase mb-8">
+                Ready to make a <br />
+                <span className="text-primary-500">Statement?</span>
+              </h2>
               <Link href="/products">
-                <Button variant="secondary">Shop Now</Button>
+                <Button size="lg" className="h-16 px-12 text-sm uppercase tracking-widest font-black">
+                  Shop the collection
+                </Button>
               </Link>
             </div>
           </div>
@@ -150,19 +155,22 @@ export default function HomePage() {
       </section>
 
       {/* Newsletter */}
-      <section className="py-16 bg-gray-900 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-2xl md:text-3xl font-bold mb-4">Stay Updated</h2>
-          <p className="text-gray-400 mb-8 max-w-xl mx-auto">
-            Subscribe to get exclusive offers, new product announcements, and faith-based content.
+      <section className="py-24 bg-white border-t border-gray-100">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl font-black text-black tracking-tighter uppercase mb-6">Stay in the Loop</h2>
+          <p className="text-gray-500 mb-10 uppercase tracking-widest text-xs font-bold leading-relaxed">
+            Join the community for exclusive drops, <br />
+            special offers and faith-based content.
           </p>
-          <form className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+          <form className="flex flex-col sm:flex-row gap-4">
             <input
               type="email"
-              placeholder="Enter your email"
-              className="flex-1 px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500"
+              placeholder="YOUR EMAIL ADDRESS"
+              className="flex-1 px-6 py-4 rounded-xl bg-gray-50 border border-gray-200 text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all uppercase text-[10px] font-bold tracking-widest"
             />
-            <Button type="submit">Subscribe</Button>
+            <Button variant="black" type="submit" className="h-14 px-8 text-[10px] uppercase tracking-widest font-black">
+              Sign Me Up
+            </Button>
           </form>
         </div>
       </section>

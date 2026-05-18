@@ -51,6 +51,105 @@ async function fetchApi<T>(
 }
 
 // Products API - Django REST Framework format
+export const inventoryApi = {
+  get: async (params?: { product?: string; store?: string }): Promise<any> => {
+    let url = apiConfig.endpoints.inventory;
+    if (params) {
+      const searchParams = new URLSearchParams();
+      if (params.product) searchParams.append('product', params.product);
+      if (params.store) searchParams.append('store', params.store);
+      url += `?${searchParams.toString()}`;
+    }
+    return fetchApi(url);
+  },
+  getLowStockAlerts: async (): Promise<any> => {
+    return fetchApi(apiConfig.endpoints.lowStockAlerts);
+  },
+};
+
+export const storesApi = {
+  get: async (): Promise<any> => {
+    return fetchApi(apiConfig.endpoints.stores);
+  },
+  create: async (data: any): Promise<any> => {
+    return fetchApi(apiConfig.endpoints.stores, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  },
+  update: async (id: string, data: any): Promise<any> => {
+    return fetchApi(`${apiConfig.endpoints.stores}${id}/`, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    });
+  },
+  delete: async (id: string): Promise<any> => {
+    return fetchApi(`${apiConfig.endpoints.stores}${id}/`, {
+      method: 'DELETE',
+    });
+  },
+};
+
+export const staffApi = {
+  get: async (): Promise<any> => {
+    return fetchApi(apiConfig.endpoints.staff);
+  },
+  create: async (data: any): Promise<any> => {
+    return fetchApi(apiConfig.endpoints.staff, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  },
+  update: async (id: string, data: any): Promise<any> => {
+    return fetchApi(`${apiConfig.endpoints.staff}${id}/`, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    });
+  },
+  delete: async (id: string): Promise<any> => {
+    return fetchApi(`${apiConfig.endpoints.staff}${id}/`, {
+      method: 'DELETE',
+    });
+  },
+};
+
+export const analyticsApi = {
+  getSales: async (params?: { start_date?: string; end_date?: string; store_id?: string }): Promise<any> => {
+    let url = apiConfig.endpoints.salesAnalytics;
+    if (params) {
+      const searchParams = new URLSearchParams();
+      if (params.start_date) searchParams.append('start_date', params.start_date);
+      if (params.end_date) searchParams.append('end_date', params.end_date);
+      if (params.store_id) searchParams.append('store_id', params.store_id);
+      url += `?${searchParams.toString()}`;
+    }
+    return fetchApi(url);
+  },
+};
+
+export const stockTransferApi = {
+  get: async (): Promise<any> => {
+    return fetchApi(apiConfig.endpoints.stockTransfers);
+  },
+  create: async (data: any): Promise<any> => {
+    return fetchApi(apiConfig.endpoints.stockTransfers, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  },
+  update: async (id: string, data: any): Promise<any> => {
+    return fetchApi(`${apiConfig.endpoints.stockTransfers}${id}/`, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    });
+  },
+  receive: async (id: string): Promise<any> => {
+    return fetchApi(`${apiConfig.endpoints.stockTransfers}${id}/receive_transfer/`, {
+      method: 'POST',
+    });
+  },
+};
+
 export const productsApi = {
   // GET /api/products/ - returns { count, next, previous, results }
   getAll: async (params?: {
@@ -72,6 +171,11 @@ export const productsApi = {
   // GET /api/products/{id}/
   getById: async (id: string): Promise<Product> => {
     return fetchApi<Product>(apiConfig.endpoints.productDetail(id));
+  },
+
+  // GET /api/pos/product-by-barcode/?barcode=...
+  getByBarcode: async (barcode: string): Promise<Product> => {
+    return fetchApi<Product>(`${apiConfig.endpoints.productByBarcode}?barcode=${barcode}`);
   },
 
   // GET /api/categories/ - returns { count, next, previous, results }
@@ -138,7 +242,7 @@ export const shippingApi = {
 // Checkout API
 export const checkoutApi = {
   createOrder: async (params: {
-    items: Array<{ product_id: string; quantity: number }>;
+    items: Array<{ product_id: string; quantity: number; price: number }>;
     shipping_address: {
       first_name: string;
       last_name: string;
@@ -148,9 +252,15 @@ export const checkoutApi = {
       state: string;
       country: string;
       phone_number: string;
+      email?: string;
     };
-    shipping_rate_id: string;
-    payment_method: 'paystack' | 'stripe';
+    shipping_rate_id?: string;
+    payment_method: 'Paystack' | 'Stripe' | 'Cash' | 'POS-Terminal' | 'Transfer';
+    total_amount: number;
+    currency: string;
+    order_source?: 'Web' | 'POS';
+    store_id?: string;
+    negotiated_discount?: number;
   }): Promise<any> => {
     return fetchApi(apiConfig.endpoints.createOrder, {
       method: 'POST',
@@ -159,7 +269,7 @@ export const checkoutApi = {
   },
 
   createWhatsAppOrder: async (params: {
-    items: Array<{ product_id: string; quantity: number }>;
+    items: Array<{ product_id: string; quantity: number; price: number }>;
     shipping_address: {
       first_name: string;
       last_name: string;
@@ -169,7 +279,10 @@ export const checkoutApi = {
       state: string;
       country: string;
       phone_number: string;
+      email?: string;
     };
+    total_amount: number;
+    currency: string;
   }): Promise<any> => {
     return fetchApi(apiConfig.endpoints.whatsappOrder, {
       method: 'POST',
@@ -185,11 +298,26 @@ export const trackingApi = {
   },
 };
 
-export { ApiError };
+// Orders API
+export const ordersApi = {
+  get: async (params?: { status?: string; source?: string }): Promise<any> => {
+    let url = '/api/orders/';
+    if (params) {
+      const searchParams = new URLSearchParams();
+      if (params.status) searchParams.append('status', params.status);
+      if (params.source) searchParams.append('order_source', params.source);
+      url += `?${searchParams.toString()}`;
+    }
+    return fetchApi(url);
+  },
+};
+
 export default {
   products: productsApi,
   auth: authApi,
   shipping: shippingApi,
   checkout: checkoutApi,
   tracking: trackingApi,
+  orders: ordersApi,
 };
+export { ApiError };

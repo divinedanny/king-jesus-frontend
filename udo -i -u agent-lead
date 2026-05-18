@@ -1,0 +1,100 @@
+[33mcommit 0828f6cedbcf7b8e50caa23edff71d16116580ee[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m
+Author: DevOps Engineer <devops-engineer@example.com>
+Date:   Mon May 18 16:32:43 2026 +0000
+
+    Fix API base URL to production
+
+ .gitignore                                 |   1 [31m-[m
+ .npmrc                                     |   0
+ AGENTS.md                                  |   0
+ CLAUDE.md                                  |   0
+ README.md                                  |   0
+ build_log.txt                              |   0
+ build_log_2.txt                            |   0
+ build_log_3.txt                            |   0
+ build_log_4.txt                            |   0
+ build_log_5.txt                            |   0
+ build_log_6.txt                            |   0
+ build_output.txt                           |   0
+ eslint.config.mjs                          |   0
+ lint_output.txt                            |   0
+ next.config.ts                             |  17 [32m+[m[31m----------------[m
+ package-lock.json                          |   0
+ package.json                               |   0
+ postcss.config.mjs                         |   0
+ public/file.svg                            |   0
+ public/globe.svg                           |   0
+ public/next.svg                            |   0
+ public/vercel.svg                          |   0
+ public/window.svg                          |   0
+ src/app/account/page.tsx                   |   0
+ src/app/auth/page.tsx                      |  29 [32m+++++++++++++++[m[31m--------------[m
+ src/app/cart/page.tsx                      |   0
+ src/app/checkout/page.tsx                  |   0
+ src/app/favicon.ico                        | Bin
+ src/app/globals.css                        |   0
+ src/app/layout.tsx                         |  82 [32m+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++[m[31m---------------[m
+ src/app/page.tsx                           |  19 [32m++++++[m[31m-------------[m
+ src/app/products/[id]/page.tsx             | 137 [32m++++++[m[31m-----------------------------------------------------------------------------------------------------------------------------------[m
+ src/app/products/page.tsx                  |   0
+ src/app/tracking/page.tsx                  | 218 [32m+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++[m[31m-----------------------------------------------------------------------------------------------------------------------------------[m
+ src/components/layout/admin-layout.tsx     | 145 [32m+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++[m
+ src/components/layout/ecommerce-layout.tsx |  57 [32m+++++++++++++++++++++++++++++++++++++++++++++++++++++++++[m
+ src/components/layout/footer.tsx           |   9 [32m++++[m[31m-----[m
+ src/components/layout/header.tsx           |   3 [32m+[m[31m--[m
+ src/components/layout/pos-layout.tsx       |  73 [32m+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++[m
+ src/components/product/product-card.tsx    |   0
+ src/components/product/product-grid.tsx    |   0
+ src/components/providers/root-provider.tsx |  62 [32m++++++++++++++++++++++[m[31m----------------------------------------[m
+ src/components/ui/button.tsx               |  15 [32m++++++++[m[31m-------[m
+ src/components/ui/card.tsx                 |   0
+ src/components/ui/input.tsx                |   0
+ src/components/ui/select.tsx               |   0
+ src/lib/api.ts                             |  69 [32m+++++++++[m[31m------------------------------------------------------------[m
+ src/lib/auth-store.ts                      |   8 [32m++++[m[31m----[m
+ src/lib/config.ts                          |  15 [32m++[m[31m-------------[m
+ src/lib/product-store.ts                   |   4 [32m++[m[31m--[m
+ src/lib/store.ts                           |   0
+ src/types/index.ts                         |  18 [31m------------------[m
+ tailwind.config.ts                         |  62 [32m++++++++++++++++++++++++++++++++[m[31m------------------------------[m
+ tsc_errors.txt                             |   0
+ tsconfig.json                              |   0
+ 55 files changed, 541 insertions(+), 502 deletions(-)
+
+[33mcommit 877a9cba34b7eb93f02f9f7de041adfdb59078fd[m
+Author: DevOps Engineer <devops-engineer@example.com>
+Date:   Fri May 15 23:50:07 2026 +0000
+
+    Fallback to Render API URL in frontend config
+
+ src/lib/config.ts | 2 [32m+[m[31m-[m
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+[33mcommit ab96fa9e8abab3bb1be236cafaf8d84851ed4b45[m
+Author: DevOps Engineer <devops-engineer@example.com>
+Date:   Fri May 15 23:46:08 2026 +0000
+
+    Add .npmrc with legacy-peer-deps to fix Vercel build error
+
+ .npmrc | 1 [32m+[m
+ 1 file changed, 1 insertion(+)
+
+[33mcommit d1bbdfb14a6beebf038bbf643ee398aa6cd3329c[m
+Author: DevOps Engineer <devops-engineer@example.com>
+Date:   Fri May 15 23:35:50 2026 +0000
+
+    Update Home Page to fetch real products and fix design issues
+
+ src/app/page.tsx | 19 [32m+++++++++++++[m[31m------[m
+ 1 file changed, 13 insertions(+), 6 deletions(-)
+
+[33mcommit 066a10496dc02a53708c71b04f04fed313707099[m
+Author: DevOps Engineer <devops-engineer@example.com>
+Date:   Fri May 15 13:10:53 2026 +0000
+
+    Refactor layout for better CSS injection and add tailwind config
+
+ src/app/layout.tsx                         | 84 [32m+++++++++++++[m[31m-----------------------------------------------------------------------[m
+ src/components/providers/root-provider.tsx | 61 [32m+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++[m
+ tailwind.config.ts                         | 53 [32m+++++++++++++++++++++++++++++++++++++++++++++++++++++[m
+ 3 files changed, 127 insertions(+), 71 deletions(-)

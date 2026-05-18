@@ -1,59 +1,28 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { Mail, Lock, User, ArrowLeft } from 'lucide-react';
-import { useAuthStore } from '@/lib/auth-store';
+import React, { useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { Mail, Lock, User, ArrowRight, ShieldCheck, Globe, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input, Card, CardContent, CardFooter } from '@/components/ui/card';
-import Link from 'next/link';
-
-// Google OAuth configuration
-const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || 'your-google-client-id';
-
-declare global {
-  interface Window {
-    google?: {
-      accounts: {
-        id: {
-          initialize: (config: any) => void;
-          renderButton: (element: HTMLElement, config: any) => void;
-          prompt: () => void;
-        };
-      };
-    };
-  }
-}
+import { Input } from '@/components/ui/input';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
+import { useAuthStore } from '@/lib/auth-store';
+import { siteConfig } from '@/lib/config';
 
 export default function AuthPage() {
-  const router = useRouter();
-  const { setUser, setLoading, isLoading, error, loginWithGoogle } = useAuthStore();
-  
   const [isLogin, setIsLogin] = useState(true);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
     password: '',
     full_name: '',
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
-
-  useEffect(() => {
-    // Initialize Google Identity Services
-    if (typeof window !== 'undefined' && window.google) {
-      window.google.accounts.id.initialize({
-        client_id: GOOGLE_CLIENT_ID,
-        callback: handleGoogleResponse,
-      });
-    }
-  }, []);
-
-  const handleGoogleResponse = async (response: any) => {
-    if (response.credential) {
-      await loginWithGoogle(response.credential);
-      router.push('/');
-    }
-  };
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { loginWithGoogle, isLoading, error } = useAuthStore();
+  const callbackUrl = searchParams.get('callbackUrl') || '/';
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -63,94 +32,90 @@ export default function AuthPage() {
     }
   };
 
-  const validateForm = () => {
-    const newErrors: Record<string, string> = {};
-    
-    if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email';
+  const handleGoogleLogin = async () => {
+    // In a real app, this would redirect to Google or use a library
+    // For this implementation, we simulate receiving a token
+    try {
+      // Mock token for simulation
+      await loginWithGoogle('mock-google-token');
+      router.push(callbackUrl);
+    } catch (err) {
+      console.error('Google login failed', err);
     }
-    
-    if (!formData.password) {
-      newErrors.password = 'Password is required';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
-    }
-    
-    if (!isLogin && !formData.full_name.trim()) {
-      newErrors.full_name = 'Full name is required';
-    }
-    
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!validateForm()) return;
-    
     setIsSubmitting(true);
-    
-    // Simulate API call for demo - in production this would call the backend
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    
-    // Mock user response
-    const mockUser = {
-      id: 'user-123',
-      email: formData.email,
-      full_name: isLogin ? 'Returning User' : formData.full_name,
-      is_staff: false,
-      date_joined: new Date().toISOString(),
-    };
-    
-    setUser(mockUser);
-    setIsSubmitting(false);
-    router.push('/');
+    // Simulating API call
+    setTimeout(() => {
+      setIsSubmitting(false);
+      router.push(callbackUrl);
+    }, 1500);
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-16">
-      <div className="max-w-md mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Back to Home */}
-        <Link href="/" className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-8">
-          <ArrowLeft className="h-4 w-4" />
-          Back to Home
-        </Link>
+    <div className="min-h-screen bg-white flex flex-col md:flex-row overflow-hidden">
+      {/* Branding Side */}
+      <div className="hidden md:flex flex-1 bg-black relative p-16 flex-col justify-between">
+         <div className="absolute inset-0 opacity-20 bg-[url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center"></div>
+         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
+         
+         <div className="relative z-10">
+            <h1 className="text-4xl font-black text-primary-500 tracking-tighter uppercase">{siteConfig.name}</h1>
+         </div>
 
-        <Card>
-          <div className="p-6 border-b border-gray-100 text-center">
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">
-              {isLogin ? 'Welcome Back' : 'Create Account'}
-            </h1>
-            <p className="text-gray-600">
-              {isLogin
-                ? 'Sign in to continue shopping'
-                : 'Join the King Jesus Collection community'}
-            </p>
+         <div className="relative z-10 space-y-12">
+            <div className="space-y-4">
+               <h2 className="text-6xl font-black text-white tracking-tighter leading-none uppercase">Join the <br /><span className="text-primary-500">Community.</span></h2>
+               <p className="text-gray-400 text-lg max-w-sm uppercase tracking-wide font-medium">Premium faith-based apparel for the modern world.</p>
+            </div>
+
+            <div className="grid grid-cols-2 gap-8">
+               <div className="space-y-3">
+                  <ShieldCheck className="w-8 h-8 text-primary-500" />
+                  <p className="text-xs font-black text-white uppercase tracking-widest">Secure Access</p>
+               </div>
+               <div className="space-y-3">
+                  <Globe className="w-8 h-8 text-primary-500" />
+                  <p className="text-xs font-black text-white uppercase tracking-widest">Global Reach</p>
+               </div>
+            </div>
+         </div>
+         
+         <div className="relative z-10 text-gray-500 text-[10px] uppercase font-bold tracking-[0.2em]">
+            © {new Date().getFullYear()} {siteConfig.name} Portal. All Rights Reserved.
+         </div>
+      </div>
+
+      {/* Form Side */}
+      <div className="flex-1 flex items-center justify-center p-8 bg-white">
+        <div className="w-full max-w-md space-y-12">
+          <div className="md:hidden text-center space-y-4">
+             <h1 className="text-2xl font-black text-black tracking-tighter uppercase">{siteConfig.name}</h1>
           </div>
 
-          <CardContent className="p-6 space-y-6">
-            {/* Error Display */}
-            {error && (
-              <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-                <p className="text-sm text-red-700">{error}</p>
-              </div>
-            )}
+          <div className="space-y-2">
+            <h2 className="text-4xl font-black text-black tracking-tighter uppercase">{isLogin ? 'Sign In' : 'Sign Up'}</h2>
+            <p className="text-gray-400 text-[10px] font-black uppercase tracking-[0.2em]">{isLogin ? 'Welcome back to the collection' : 'Become a member of our faith community'}</p>
+          </div>
 
-            {/* Google Auth Button */}
+          {error && (
+            <div className="bg-red-50 border border-red-100 p-4 rounded-2xl flex items-center gap-3">
+               <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center text-red-600 shrink-0">!</div>
+               <p className="text-[10px] font-bold text-red-600 uppercase tracking-widest">{error}</p>
+            </div>
+          )}
+
+          <div className="space-y-8">
             <Button
-              variant="outline"
+              variant="black"
               size="lg"
-              onClick={() => {
-                if (window.google) {
-                  window.google.accounts.id.prompt();
-                }
-              }}
+              onClick={handleGoogleLogin}
               isLoading={isLoading}
-              className="w-full"
+              className="w-full h-14 rounded-xl text-[10px] font-black uppercase tracking-widest gap-4"
             >
-              <svg className="h-5 w-5 mr-2" viewBox="0 0 24 24">
+              <svg className="h-5 w-5" viewBox="0 0 24 24">
                 <path
                   fill="currentColor"
                   d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -173,76 +138,69 @@ export default function AuthPage() {
 
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-200" />
+                <div className="w-full border-t border-gray-100" />
               </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">or</span>
+              <div className="relative flex justify-center text-[8px] font-black uppercase tracking-widest">
+                <span className="px-4 bg-white text-gray-400">or use email</span>
               </div>
             </div>
 
-            {/* Email/Password Form */}
-            <form onSubmit={handleSubmit} className="space-y-4">
-              {!isLogin && (
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="space-y-4">
+                {!isLogin && (
+                  <Input
+                    placeholder="FULL NAME"
+                    name="full_name"
+                    value={formData.full_name}
+                    onChange={handleInputChange}
+                    className="h-14 bg-gray-50 border-none rounded-xl text-[10px] font-bold uppercase tracking-widest pl-6"
+                  />
+                )}
                 <Input
-                  label="Full Name"
-                  name="full_name"
-                  value={formData.full_name}
+                  placeholder="EMAIL ADDRESS"
+                  name="email"
+                  type="email"
+                  value={formData.email}
                   onChange={handleInputChange}
-                  error={errors.full_name}
-                  placeholder="John Doe"
-                  icon={User}
+                  className="h-14 bg-gray-50 border-none rounded-xl text-[10px] font-bold uppercase tracking-widest pl-6"
                 />
-              )}
-              
-              <Input
-                label="Email Address"
-                name="email"
-                type="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                error={errors.email}
-                placeholder="you@example.com"
-                icon={Mail}
-              />
-              
-              <Input
-                label="Password"
-                name="password"
-                type="password"
-                value={formData.password}
-                onChange={handleInputChange}
-                error={errors.password}
-                placeholder="••••••••"
-                icon={Lock}
-              />
+                <Input
+                  placeholder="PASSWORD"
+                  name="password"
+                  type="password"
+                  value={formData.password}
+                  onChange={handleInputChange}
+                  className="h-14 bg-gray-50 border-none rounded-xl text-[10px] font-bold uppercase tracking-widest pl-6"
+                />
+              </div>
 
               {isLogin && (
                 <div className="text-right">
-                  <a href="#" className="text-sm text-primary-600 hover:text-primary-700">
-                    Forgot password?
-                  </a>
+                  <button type="button" className="text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-black">
+                    Forgot Password?
+                  </button>
                 </div>
               )}
 
-              <Button type="submit" size="lg" isLoading={isSubmitting} className="w-full">
-                {isLogin ? 'Sign In' : 'Create Account'}
+              <Button type="submit" size="lg" isLoading={isSubmitting} className="w-full h-16 rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-2xl shadow-primary-500/10">
+                {isLogin ? 'Enter The Collection' : 'Create Member Account'}
               </Button>
             </form>
-          </CardContent>
 
-          <CardFooter className="p-6 bg-gray-50 border-t border-gray-100 text-center">
-            <p className="text-sm text-gray-600">
-              {isLogin ? "Don't have an account?" : 'Already have an account?'}{' '}
-              <button
-                type="button"
-                onClick={() => setIsLogin(!isLogin)}
-                className="text-primary-600 hover:text-primary-700 font-medium"
-              >
-                {isLogin ? 'Sign Up' : 'Sign In'}
-              </button>
-            </p>
-          </CardFooter>
-        </Card>
+            <div className="text-center pt-8">
+               <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
+                  {isLogin ? "Don't have an account?" : 'Already a member?'}{' '}
+                  <button
+                    type="button"
+                    onClick={() => setIsLogin(!isLogin)}
+                    className="text-black hover:text-primary-500 transition-colors ml-1"
+                  >
+                    {isLogin ? 'Sign Up' : 'Sign In'}
+                  </button>
+               </p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

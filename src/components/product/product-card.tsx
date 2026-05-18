@@ -1,13 +1,13 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import Image from 'next/image';
-import { ShoppingCart, Eye } from 'lucide-react';
+import { ShoppingCart, Eye, Star } from 'lucide-react';
 import { Product } from '@/types';
 import { useCartStore } from '@/lib/store';
 import { formatCurrency } from '@/lib/config';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/card';
+import { useRouter } from 'next/navigation';
 
 interface ProductCardProps {
   product: Product;
@@ -16,162 +16,101 @@ interface ProductCardProps {
 
 export function ProductCard({ product, onViewDetails }: ProductCardProps) {
   const { addItem, currency } = useCartStore();
+  const router = useRouter();
+  
   const isOutOfStock = product.stock_quantity === 0;
-
+  
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!isOutOfStock) {
-      addItem(product, 1);
-    }
+    addItem(product, 1);
   };
 
-  const handleViewDetails = (e: React.MouseEvent) => {
+  const handleViewDetails = () => {
     if (onViewDetails) {
       onViewDetails();
+    } else {
+      router.push(`/products/${product.id}`);
     }
   };
 
-  // Filter items by current currency for display
   const displayPrice = product.currency === currency 
     ? product.price 
-    : product.price; // In real app, would convert currency
+    : product.price;
 
   return (
-    <div
-      className="group bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow duration-200 cursor-pointer"
+    <div 
       onClick={handleViewDetails}
+      className="group bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-2xl transition-all duration-500 cursor-pointer flex flex-col h-full"
     >
-      {/* Image */}
-      <div className="relative aspect-square overflow-hidden bg-gray-100">
+      {/* Image Container */}
+      <div className="relative aspect-[4/5] overflow-hidden bg-gray-50">
         {product.images && product.images.length > 0 ? (
           <Image
             src={product.images[0]}
             alt={product.name}
             fill
-            className="object-cover group-hover:scale-105 transition-transform duration-300"
+            className="object-cover transition-transform duration-700 group-hover:scale-110"
           />
         ) : (
-          <div className="flex items-center justify-center h-full text-gray-400">
-            <span className="text-4xl">📦</span>
+          <div className="flex items-center justify-center h-full text-gray-300">
+            <span className="text-6xl">📦</span>
           </div>
         )}
         
-        {/* Badges */}
-        <div className="absolute top-2 left-2 flex gap-2">
-          {product.currency === 'NGN' && (
-            <Badge variant="success">🇳🇬 NGN</Badge>
-          )}
-          {product.currency === 'USD' && (
-            <Badge variant="info">🌍 USD</Badge>
-          )}
-          {isOutOfStock && (
-            <Badge variant="error">Out of Stock</Badge>
-          )}
+        {/* Out of Stock Overlay */}
+        {isOutOfStock && (
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px] flex items-center justify-center z-10">
+            <span className="bg-white text-black px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">
+              Sold Out
+            </span>
+          </div>
+        )}
+
+        {/* Quick Add Button (Desktop) */}
+        <div className="absolute bottom-4 left-4 right-4 translate-y-12 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 hidden md:block z-20">
+          <Button
+            variant="primary"
+            className="w-full h-12 text-[10px] uppercase font-black tracking-widest shadow-xl"
+            icon={ShoppingCart}
+            onClick={handleAddToCart}
+            disabled={isOutOfStock}
+          >
+            Quick Add
+          </Button>
         </div>
       </div>
 
       {/* Content */}
-      <div className="p-4">
-        <p className="text-xs text-gray-500 mb-1">{product.category?.name}</p>
-        <h3 className="font-semibold text-gray-900 mb-1 line-clamp-1">
+      <div className="p-5 flex flex-col flex-1">
+        <div className="flex items-center justify-between mb-2">
+          <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">
+            {product.category?.name || 'Collection'}
+          </p>
+          <div className="flex items-center gap-1">
+            <Star className="w-3 h-3 text-primary-500 fill-primary-500" />
+            <span className="text-[10px] font-bold text-gray-600">{product.average_rating?.toFixed(1) || '5.0'}</span>
+          </div>
+        </div>
+
+        <h3 className="text-sm font-bold text-black mb-2 line-clamp-1 group-hover:text-primary-600 transition-colors uppercase tracking-tight">
           {product.name}
         </h3>
-        <p className="text-sm text-gray-600 mb-3 line-clamp-2">
-          {product.description}
-        </p>
         
-        {/* Price */}
-        <div className="flex items-center justify-between mb-3">
-          <span className="text-lg font-bold text-primary-600">
+        <div className="mt-auto pt-4 flex items-center justify-between">
+          <span className="text-base font-black text-black tracking-tighter">
             {formatCurrency(displayPrice, product.currency)}
           </span>
-          <span className="text-sm text-gray-500">
-            {product.stock_quantity > 0 ? `${product.stock_quantity} in stock` : 'Out of stock'}
-          </span>
-        </div>
-
-        {/* Actions */}
-        <div className="flex gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            icon={Eye}
-            onClick={handleViewDetails}
-            className="flex-1"
-          >
-            Details
-          </Button>
-          <Button
-            variant="primary"
-            size="sm"
-            icon={ShoppingCart}
-            onClick={handleAddToCart}
-            disabled={isOutOfStock}
-            className="flex-1"
-          >
-            Add
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-interface ProductGridProps {
-  products: Product[];
-  columns?: 1 | 2 | 3 | 4;
-  loading?: boolean;
-  onProductClick?: (product: Product) => void;
-}
-
-export function ProductGrid({ 
-  products, 
-  columns = 3, 
-  loading = false,
-  onProductClick,
-}: ProductGridProps) {
-  const gridCols = {
-    1: 'grid-cols-1',
-    2: 'grid-cols-1 sm:grid-cols-2',
-    3: 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3',
-    4: 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4',
-  };
-
-  if (loading) {
-    return (
-      <div className={`grid ${gridCols[columns]} gap-6`}>
-        {[...Array(6)].map((_, i) => (
-          <div key={i} className="bg-white rounded-xl border border-gray-100 animate-pulse">
-            <div className="aspect-square bg-gray-200 rounded-t-xl" />
-            <div className="p-4 space-y-3">
-              <div className="h-4 bg-gray-200 rounded w-1/4" />
-              <div className="h-5 bg-gray-200 rounded w-3/4" />
-              <div className="h-4 bg-gray-200 rounded w-full" />
-              <div className="h-4 bg-gray-200 rounded w-1/2" />
-            </div>
+          <div className="md:hidden">
+             <button 
+               onClick={handleAddToCart}
+               disabled={isOutOfStock}
+               className="w-8 h-8 rounded-full bg-black text-primary-500 flex items-center justify-center disabled:opacity-50"
+             >
+               <ShoppingCart className="w-4 h-4" />
+             </button>
           </div>
-        ))}
+        </div>
       </div>
-    );
-  }
-
-  if (products.length === 0) {
-    return (
-      <div className="text-center py-12">
-        <p className="text-gray-500 text-lg">No products found</p>
-      </div>
-    );
-  }
-
-  return (
-    <div className={`grid ${gridCols[columns]} gap-6`}>
-      {products.map((product) => (
-        <ProductCard 
-          key={product.id} 
-          product={product}
-          onViewDetails={onProductClick ? () => onProductClick(product) : undefined}
-        />
-      ))}
     </div>
   );
 }

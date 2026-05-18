@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useAuthStore } from '@/lib/auth-store';
 import { siteConfig } from '@/lib/config';
 import { 
@@ -15,7 +15,9 @@ import {
   Search,
   Menu,
   LogOut,
-  ChevronDown
+  ChevronDown,
+  Layers,
+  Store
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
@@ -37,13 +39,17 @@ export function AdminLayout({ children }: AdminLayoutProps) {
 
   if (!mounted) return null;
 
+  const pathname = usePathname();
+
   const navItems = [
-    { label: 'Dashboard', icon: LayoutDashboard, href: '/admin', active: true },
-    { label: 'Orders', icon: ShoppingCart, href: '/admin/orders' },
-    { label: 'Products', icon: Package, href: '/admin/products' },
-    { label: 'Customers', icon: Users, href: '/admin/customers' },
-    { label: 'Analytics', icon: BarChart3, href: '/admin/analytics' },
-    { label: 'Settings', icon: Settings, href: '/admin/settings' },
+    { label: 'Dashboard', icon: LayoutDashboard, href: '/admin', active: pathname === '/admin' },
+    { label: 'Orders', icon: ShoppingCart, href: '/admin/orders', active: pathname.startsWith('/admin/orders') },
+    { label: 'Products', icon: Package, href: '/admin/products', active: pathname.startsWith('/admin/products') },
+    { label: 'Inventory', icon: Layers, href: '/admin/inventory', active: pathname.startsWith('/admin/inventory') },
+    { label: 'Stores', icon: Store, href: '/admin/stores', active: pathname.startsWith('/admin/stores') },
+    { label: 'Staff', icon: Users, href: '/admin/staff', active: pathname.startsWith('/admin/staff') },
+    { label: 'Analytics', icon: BarChart3, href: '/admin/analytics', active: pathname.startsWith('/admin/analytics') },
+    { label: 'Settings', icon: Settings, href: '/admin/settings', active: pathname.startsWith('/admin/settings') },
   ];
 
   return (
