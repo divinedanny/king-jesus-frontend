@@ -1,5 +1,5 @@
 import { apiConfig } from './config';
-import { Product, Category, User, Review, Wishlist, Order } from '@/types';
+import { Product, Category, User } from '@/types';
 
 class ApiError extends Error {
   status: number;
@@ -127,7 +127,7 @@ export const shippingApi = {
       product_id: string;
       quantity: number;
     }>;
-  }): Promise<unknown> => {
+  }): Promise<any> => {
     return fetchApi(apiConfig.endpoints.calculateShipping, {
       method: 'POST',
       body: JSON.stringify(params),
@@ -138,7 +138,7 @@ export const shippingApi = {
 // Checkout API
 export const checkoutApi = {
   createOrder: async (params: {
-    items: Array<{ product_id: string; quantity: number; price: number }>;
+    items: Array<{ product_id: string; quantity: number }>;
     shipping_address: {
       first_name: string;
       last_name: string;
@@ -148,13 +148,10 @@ export const checkoutApi = {
       state: string;
       country: string;
       phone_number: string;
-      email: string;
     };
     shipping_rate_id: string;
-    payment_method: 'Paystack' | 'Stripe';
-    currency: string;
-    total_amount: number;
-  }): Promise<unknown> => {
+    payment_method: 'paystack' | 'stripe';
+  }): Promise<any> => {
     return fetchApi(apiConfig.endpoints.createOrder, {
       method: 'POST',
       body: JSON.stringify(params),
@@ -162,7 +159,7 @@ export const checkoutApi = {
   },
 
   createWhatsAppOrder: async (params: {
-    items: Array<{ product_id: string; quantity: number; price: number }>;
+    items: Array<{ product_id: string; quantity: number }>;
     shipping_address: {
       first_name: string;
       last_name: string;
@@ -172,11 +169,8 @@ export const checkoutApi = {
       state: string;
       country: string;
       phone_number: string;
-      email: string;
     };
-    currency: string;
-    total_amount: number;
-  }): Promise<unknown> => {
+  }): Promise<any> => {
     return fetchApi(apiConfig.endpoints.whatsappOrder, {
       method: 'POST',
       body: JSON.stringify(params),
@@ -184,52 +178,10 @@ export const checkoutApi = {
   },
 };
 
-// Orders API
-export const ordersApi = {
-  getAll: async (): Promise<Order[]> => {
-    return fetchApi(apiConfig.endpoints.orders);
-  },
-  getById: async (id: string): Promise<Order> => {
-    return fetchApi(`${apiConfig.endpoints.orders}${id}/`);
-  },
-};
-
 // Tracking API
 export const trackingApi = {
-  getStatus: async (trackingNumber: string): Promise<unknown> => {
+  getStatus: async (trackingNumber: string): Promise<any> => {
     return fetchApi(apiConfig.endpoints.tracking(trackingNumber));
-  },
-};
-
-// Reviews API
-export const reviewsApi = {
-  getByProduct: async (productId: string): Promise<Review[]> => {
-    return fetchApi<Review[]>(`${apiConfig.endpoints.reviews}?product=${productId}`);
-  },
-  create: async (data: { product: string; rating: number; comment: string }): Promise<Review> => {
-    return fetchApi<Review>(apiConfig.endpoints.reviews, {
-      method: 'POST',
-      body: JSON.stringify(data),
-    });
-  },
-};
-
-// Wishlist API
-export const wishlistApi = {
-  get: async (): Promise<Wishlist[]> => {
-    return fetchApi<Wishlist[]>(apiConfig.endpoints.wishlist);
-  },
-  addProduct: async (productId: string): Promise<void> => {
-    await fetchApi(`${apiConfig.endpoints.wishlist}add_product/`, {
-      method: 'POST',
-      body: JSON.stringify({ product_id: productId }),
-    });
-  },
-  removeProduct: async (productId: string): Promise<void> => {
-    await fetchApi(`${apiConfig.endpoints.wishlist}remove_product/`, {
-      method: 'POST',
-      body: JSON.stringify({ product_id: productId }),
-    });
   },
 };
 
@@ -239,8 +191,5 @@ export default {
   auth: authApi,
   shipping: shippingApi,
   checkout: checkoutApi,
-  orders: ordersApi,
   tracking: trackingApi,
-  reviews: reviewsApi,
-  wishlist: wishlistApi,
 };

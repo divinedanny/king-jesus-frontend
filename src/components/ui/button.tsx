@@ -4,7 +4,7 @@ import React from 'react';
 import { LucideIcon } from 'lucide-react';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'whatsapp';
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'whatsapp' | 'black';
   size?: 'sm' | 'md' | 'lg';
   icon?: LucideIcon;
   iconPosition?: 'left' | 'right';
@@ -13,10 +13,11 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const variantStyles = {
-  primary: 'bg-primary-600 text-white hover:bg-primary-700 shadow-sm',
-  secondary: 'bg-secondary-600 text-white hover:bg-secondary-700 shadow-sm',
-  outline: 'border-2 border-primary-600 text-primary-600 hover:bg-primary-50',
-  ghost: 'text-primary-600 hover:bg-primary-50',
+  primary: 'bg-primary-500 text-black hover:bg-primary-600 shadow-sm',
+  secondary: 'bg-white text-black border border-gray-200 hover:bg-gray-50 shadow-sm',
+  black: 'bg-black text-primary-500 hover:bg-gray-900 shadow-sm',
+  outline: 'border-2 border-primary-500 text-primary-500 hover:bg-primary-50',
+  ghost: 'text-primary-500 hover:bg-primary-50',
   whatsapp: 'bg-[#25D366] text-white hover:bg-[#128C7E] shadow-sm',
 };
 
@@ -41,7 +42,7 @@ export function Button({
     <button
       className={`
         inline-flex items-center justify-center gap-2 rounded-lg font-medium
-        transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2
+        transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2
         disabled:opacity-50 disabled:cursor-not-allowed
         ${variantStyles[variant]}
         ${sizeStyles[size]}

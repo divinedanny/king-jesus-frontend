@@ -1,85 +1,33 @@
 'use client';
 
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { ArrowLeft, ShoppingCart, Minus, Plus, Check, Heart, Star } from 'lucide-react';
+import { ArrowLeft, ShoppingCart, Minus, Plus, Check } from 'lucide-react';
 import { useProductStore } from '@/lib/product-store';
 import { useCartStore } from '@/lib/store';
-import { useAuthStore } from '@/lib/auth-store';
 import { formatCurrency } from '@/lib/config';
-import { reviewsApi, wishlistApi } from '@/lib/api';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, Badge } from '@/components/ui/card';
-import { Review } from '@/types';
 
 export default function ProductDetailPage() {
   const params = useParams();
   const router = useRouter();
   const { selectedProduct, isLoading, error, fetchProductById, clearError } = useProductStore();
   const { addItem, currency } = useCartStore();
-  const { isAuthenticated } = useAuthStore();
   
   const [quantity, setQuantity] = useState(1);
   const [addedToCart, setAddedToCart] = useState(false);
   const [selectedImage, setSelectedImage] = useState(0);
-  const [isInWishlist, setIsInWishlist] = useState(false);
-  const [reviews, setReviews] = useState<Review[]>([]);
-  const [isWishlistLoading, setIsWishlistLoading] = useState(false);
 
   const productId = params.id as string;
-
-  const fetchReviews = useCallback(async () => {
-    try {
-      const data = await reviewsApi.getByProduct(productId);
-      setReviews(data);
-    } catch (err) {
-      console.error('Failed to fetch reviews', err);
-    }
-  }, [productId]);
-
-  const checkWishlist = useCallback(async () => {
-    if (!isAuthenticated) return;
-    try {
-      const wishlists = await wishlistApi.get();
-      // Check if any wishlist contains this product
-      const found = wishlists.some(w => w.products.some(p => p.id === productId));
-      setIsInWishlist(found);
-    } catch (err) {
-      console.error('Failed to check wishlist', err);
-    }
-  }, [productId, isAuthenticated]);
 
   useEffect(() => {
     if (productId) {
       fetchProductById(productId);
-      fetchReviews();
-      checkWishlist();
       clearError();
     }
-  }, [productId, isAuthenticated, fetchProductById, fetchReviews, checkWishlist, clearError]);
-
-  const toggleWishlist = async () => {
-    if (!isAuthenticated) {
-      router.push('/auth');
-      return;
-    }
-    
-    setIsWishlistLoading(true);
-    try {
-      if (isInWishlist) {
-        await wishlistApi.removeProduct(productId);
-        setIsInWishlist(false);
-      } else {
-        await wishlistApi.addProduct(productId);
-        setIsInWishlist(true);
-      }
-    } catch (err) {
-      console.error('Failed to toggle wishlist', err);
-    } finally {
-      setIsWishlistLoading(false);
-    }
-  };
+  }, [productId]);
 
   const handleAddToCart = () => {
     if (selectedProduct) {
@@ -257,7 +205,7 @@ export default function ProductDetailPage() {
                 icon={addedToCart ? Check : ShoppingCart}
                 onClick={handleAddToCart}
                 disabled={isOutOfStock}
-                className={addedToCart ? 'bg-green-600 hover:bg-green-700 flex-1' : 'flex-1'}
+                className={addedToCart ? 'bg-green-600 hover:bg-green-700' : ''}
               >
                 {addedToCart ? 'Added to Cart' : 'Add to Cart'}
               </Button>
@@ -265,12 +213,9 @@ export default function ProductDetailPage() {
               <Button
                 size="lg"
                 variant="outline"
-                icon={Heart}
-                onClick={toggleWishlist}
-                isLoading={isWishlistLoading}
-                className={isInWishlist ? 'text-red-600 border-red-600 hover:bg-red-50' : ''}
+                onClick={() => router.push('/cart')}
               >
-                {isInWishlist ? 'Wishlisted' : 'Wishlist'}
+                View Cart
               </Button>
             </div>
 
@@ -294,76 +239,6 @@ export default function ProductDetailPage() {
               </CardContent>
             </Card>
           </div>
-        </div>
-
-        {/* Reviews Section */}
-        <div className="mt-16">
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="text-2xl font-bold text-gray-900">Customer Reviews</h2>
-            <div className="flex items-center gap-2">
-              <div className="flex">
-                {[1, 2, 3, 4, 5].map((s) => (
-                  <Star
-                    key={s}
-                    className={`h-5 w-5 ${
-                      s <= (selectedProduct.average_rating || 0)
-                        ? 'text-yellow-400 fill-yellow-400'
-                        : 'text-gray-300'
-                    }`}
-                  />
-                ))}
-              </div>
-              <span className="font-medium text-gray-900">
-                {selectedProduct.average_rating?.toFixed(1) || '0.0'}
-              </span>
-              <span className="text-gray-500">
-                ({reviews.length} reviews)
-              </span>
-            </div>
-          </div>
-
-          {reviews.length > 0 ? (
-            <div className="grid gap-6 md:grid-cols-2">
-              {reviews.map((review) => (
-                <Card key={review.id}>
-                  <CardContent className="p-6">
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center text-primary-700 font-bold">
-                          {review.user.full_name.charAt(0)}
-                        </div>
-                        <div>
-                          <p className="font-medium text-gray-900">{review.user.full_name}</p>
-                          <p className="text-sm text-gray-500">
-                            {new Date(review.created_at).toLocaleDateString()}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex">
-                        {[1, 2, 3, 4, 5].map((s) => (
-                          <Star
-                            key={s}
-                            className={`h-4 w-4 ${
-                              s <= review.rating
-                                ? 'text-yellow-400 fill-yellow-400'
-                                : 'text-gray-300'
-                            }`}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                    <p className="text-gray-600">{review.comment}</p>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          ) : (
-            <Card className="text-center py-12">
-              <CardContent>
-                <p className="text-gray-500">No reviews yet. Be the first to review this product!</p>
-              </CardContent>
-            </Card>
-          )}
         </div>
       </div>
     </div>

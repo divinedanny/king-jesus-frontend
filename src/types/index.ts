@@ -9,26 +9,8 @@ export interface Product {
   images: string[];
   category: Category;
   category_id: string;
-  average_rating?: number;
-  review_count?: number;
-  reviews?: Review[];
   created_at: string;
   updated_at: string;
-}
-
-export interface Review {
-  id: string;
-  user: User;
-  product_id: string;
-  rating: number;
-  comment: string;
-  created_at: string;
-}
-
-export interface Wishlist {
-  id: string;
-  user_id: string;
-  products: Product[];
 }
 
 export interface Category {

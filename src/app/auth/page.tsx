@@ -1,13 +1,11 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Mail, Lock, User, ArrowLeft } from 'lucide-react';
 import { useAuthStore } from '@/lib/auth-store';
-import { siteConfig } from '@/lib/config';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { Input, Card, CardContent, CardFooter } from '@/components/ui/card';
 import Link from 'next/link';
 
 // Google OAuth configuration
@@ -40,13 +38,6 @@ export default function AuthPage() {
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const handleGoogleResponse = useCallback(async (response: { credential?: string }) => {
-    if (response.credential) {
-      await loginWithGoogle(response.credential);
-      router.push('/');
-    }
-  }, [loginWithGoogle, router]);
-
   useEffect(() => {
     // Initialize Google Identity Services
     if (typeof window !== 'undefined' && window.google) {
@@ -55,7 +46,14 @@ export default function AuthPage() {
         callback: handleGoogleResponse,
       });
     }
-  }, [handleGoogleResponse]);
+  }, []);
+
+  const handleGoogleResponse = async (response: any) => {
+    if (response.credential) {
+      await loginWithGoogle(response.credential);
+      router.push('/');
+    }
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -127,8 +125,8 @@ export default function AuthPage() {
             </h1>
             <p className="text-gray-600">
               {isLogin
-                ? `Sign in to your ${siteConfig.name} account`
-                : `Join the ${siteConfig.name} community`}
+                ? 'Sign in to continue shopping'
+                : 'Join the King Jesus Collection community'}
             </p>
           </div>
 
@@ -192,6 +190,7 @@ export default function AuthPage() {
                   onChange={handleInputChange}
                   error={errors.full_name}
                   placeholder="John Doe"
+                  icon={User}
                 />
               )}
               
@@ -203,6 +202,7 @@ export default function AuthPage() {
                 onChange={handleInputChange}
                 error={errors.email}
                 placeholder="you@example.com"
+                icon={Mail}
               />
               
               <Input
@@ -213,6 +213,7 @@ export default function AuthPage() {
                 onChange={handleInputChange}
                 error={errors.password}
                 placeholder="••••••••"
+                icon={Lock}
               />
 
               {isLogin && (

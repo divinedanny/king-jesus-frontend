@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { ShoppingCart, User, Package, Menu, X, Globe } from 'lucide-react';
 import { useCartStore } from '@/lib/store';
 import { useAuthStore } from '@/lib/auth-store';
-import { siteConfig } from '@/lib/config';
 import { Button } from '@/components/ui/button';
 
 interface HeaderProps {
@@ -26,7 +25,7 @@ export function Header({ isLocal, onToggleLocale }: HeaderProps) {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
             <span className="text-2xl font-bold bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent">
-              {siteConfig.name}
+              King Jesus Collection
             </span>
           </Link>
 

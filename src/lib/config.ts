@@ -55,8 +55,8 @@ export const theme = {
 
 // WhatsApp configuration
 export const whatsappConfig = {
-  phoneNumber: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '2347049497394',
-  getMessageLink: (message: string) =>
+  phoneNumber: '2347049497394',
+  getMessageLink: (message: string) => 
     `https://wa.me/${whatsappConfig.phoneNumber}?text=${encodeURIComponent(message)}`,
   formatOrderMessage: (order: {
     name: string;
@@ -76,12 +76,6 @@ Shipping Address: ${order.address}`;
   },
 };
 
-// Site configuration
-export const siteConfig = {
-  name: process.env.NEXT_PUBLIC_COMPANY_NAME || 'King Jesus Collection',
-  description: 'Premium Fashion and Accessories',
-};
-
 // API configuration - points to Django backend
 export const apiConfig = {
   baseUrl: process.env.NEXT_PUBLIC_API_URL || 'https://king-jesus-backend.onrender.com',
@@ -90,7 +84,6 @@ export const apiConfig = {
     products: '/api/products/',
     productDetail: (id: string) => `/api/products/${id}/`,
     categories: '/api/categories/',
-    orders: '/api/orders/',
     
     // Checkout (from core/urls.py)
     calculateShipping: '/api/checkout/calculate-shipping/',
@@ -103,10 +96,6 @@ export const apiConfig = {
     
     // Tracking
     tracking: (trackingNumber: string) => `/api/tracking/${trackingNumber}/`,
-    
-    // Reviews & Wishlist
-    reviews: '/api/reviews/',
-    wishlist: '/api/wishlist/',
     
     // Auth (from config/urls.py)
     auth: {
