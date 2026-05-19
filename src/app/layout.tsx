@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { useCartStore } from '@/lib/store';
-import { siteConfig } from '@/lib/config';
+import { siteConfig } from '../lib/config';
 
 interface LocaleProviderProps {
   children: React.ReactNode;
@@ -26,7 +26,7 @@ function LocaleProvider({ children, isLocal, onToggleLocale }: LocaleProviderPro
     <>
       <Header isLocal={isLocal} onToggleLocale={onToggleLocale} />
       <main className="min-h-screen">
-        <Suspense fallback={<div className=\"flex items-center justify-center p-12\"><div className=\"animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600\"></div></div>}>
+        <Suspense fallback={<div className="flex items-center justify-center p-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div></div>}>
           {children}
         </Suspense>
       </main>
@@ -63,10 +63,10 @@ export default function RootLayout({
   // Avoid hydration mismatch
   if (!mounted) {
     return (
-      <html lang=\"en\">
+      <html lang="en">
         <body>
-          <div className=\"flex items-center justify-center min-h-screen\">
-            <div className=\"animate-pulse text-primary-600\">Loading...</div>
+          <div className="flex items-center justify-center min-h-screen">
+            <div className="animate-pulse text-primary-600">Loading...</div>
           </div>
         </body>
       </html>
@@ -74,8 +74,8 @@ export default function RootLayout({
   }
 
   return (
-    <html lang=\"en\">
-      <body className=\"antialiased\">
+    <html lang="en">
+      <body className="antialiased">
         <LocaleProvider isLocal={isLocal} onToggleLocale={handleToggleLocale}>
           {children}
         </LocaleProvider>

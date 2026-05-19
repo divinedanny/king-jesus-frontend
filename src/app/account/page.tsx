@@ -18,7 +18,7 @@ export default function AccountPage() {
 
   const fetchOrders = useCallback(async () => {
     try {
-      const data = await ordersApi.getAll();
+      const data = await ordersApi.get();
       if (Array.isArray(data)) {
         setOrders(data);
       } else if ((data as any).results) {

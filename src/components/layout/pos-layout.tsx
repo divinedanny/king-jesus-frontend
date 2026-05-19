@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/lib/auth-store';
-import { siteConfig } from '@/lib/config';
+import { siteConfig } from '../../lib/config';
 import { Monitor, LogOut, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 

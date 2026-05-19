@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { ShoppingCart, User, Menu, X, Globe } from 'lucide-react';
 import { useCartStore } from '@/lib/store';
 import { useAuthStore } from '@/lib/auth-store';
-import { siteConfig } from '@/lib/config';
+import { siteConfig } from '../../lib/config';
 import { Button } from '@/components/ui/button';
 
 interface HeaderProps {

@@ -298,6 +298,41 @@ export const trackingApi = {
   },
 };
 
+// Reviews API
+export const reviewsApi = {
+  getByProduct: async (productId: string): Promise<any[]> => {
+    // For now, return empty array if not implemented in backend
+    try {
+      return await fetchApi(`/api/products/${productId}/reviews/`);
+    } catch {
+      return [];
+    }
+  },
+};
+
+// Wishlist API
+export const wishlistApi = {
+  get: async (): Promise<any[]> => {
+    try {
+      return await fetchApi('/api/wishlist/');
+    } catch {
+      return [];
+    }
+  },
+  addProduct: async (productId: string): Promise<any> => {
+    return fetchApi('/api/wishlist/add_product/', {
+      method: 'POST',
+      body: JSON.stringify({ product_id: productId }),
+    });
+  },
+  removeProduct: async (productId: string): Promise<any> => {
+    return fetchApi('/api/wishlist/remove_product/', {
+      method: 'POST',
+      body: JSON.stringify({ product_id: productId }),
+    });
+  },
+};
+
 // Orders API
 export const ordersApi = {
   get: async (params?: { status?: string; source?: string }): Promise<any> => {

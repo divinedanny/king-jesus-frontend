@@ -4,11 +4,11 @@ import React, { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Search, Grid, List, SlidersHorizontal, ChevronRight } from 'lucide-react';
 import { ProductGrid } from '@/components/product/product-grid';
-import { productsApi } from '@/lib/api';
+import { productsApi } from '../../lib/api';
 import { Product, Category } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Input, Select } from '@/components/ui/input';
-import { useProductStore } from '@/lib/product-store';
+import { useProductStore } from '../../lib/product-store';
 
 export default function ProductsPage() {
   const router = useRouter();

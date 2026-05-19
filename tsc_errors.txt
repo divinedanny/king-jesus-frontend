@@ -1,3 +1,39 @@
-src/lib/auth-store.ts(55,11): error TS2304: Cannot find name 'setUser'.
-src/lib/auth-store.ts(57,11): error TS2304: Cannot find name 'setError'.
-src/lib/auth-store.ts(93,11): error TS2304: Cannot find name 'setUser'.
+src/app/layout.tsx(29,44): error TS1127: Invalid character.
+src/app/layout.tsx(29,85): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/app/layout.tsx(29,101): error TS1127: Invalid character.
+src/app/layout.tsx(29,168): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/app/layout.tsx(29,171): error TS17002: Expected corresponding JSX closing tag for 'main'.
+src/app/layout.tsx(29,177): error TS17015: Expected corresponding closing tag for JSX fragment.
+src/app/layout.tsx(29,181): error TS1109: Expression expected.
+src/app/layout.tsx(29,182): error TS1109: Expression expected.
+src/app/layout.tsx(31,9): error TS1128: Declaration or statement expected.
+src/app/layout.tsx(32,7): error TS1109: Expression expected.
+src/app/layout.tsx(34,5): error TS1128: Declaration or statement expected.
+src/app/layout.tsx(34,7): error TS1109: Expression expected.
+src/app/layout.tsx(35,3): error TS1109: Expression expected.
+src/app/layout.tsx(36,1): error TS1128: Declaration or statement expected.
+src/app/layout.tsx(66,18): error TS1127: Invalid character.
+src/app/layout.tsx(66,19): error TS1003: Identifier expected.
+src/app/layout.tsx(66,25): error TS1002: Unterminated string literal.
+src/app/layout.tsx(68,26): error TS1127: Invalid character.
+src/app/layout.tsx(68,27): error TS1003: Identifier expected.
+src/app/layout.tsx(68,76): error TS1002: Unterminated string literal.
+src/app/layout.tsx(69,18): error TS1005: ';' expected.
+src/app/layout.tsx(69,28): error TS1127: Invalid character.
+src/app/layout.tsx(69,79): error TS1002: Unterminated string literal.
+src/app/layout.tsx(70,11): error TS1128: Declaration or statement expected.
+src/app/layout.tsx(71,9): error TS1109: Expression expected.
+src/app/layout.tsx(72,7): error TS1109: Expression expected.
+src/app/layout.tsx(73,5): error TS1109: Expression expected.
+src/app/layout.tsx(77,16): error TS1127: Invalid character.
+src/app/layout.tsx(77,17): error TS1003: Identifier expected.
+src/app/layout.tsx(77,23): error TS1002: Unterminated string literal.
+src/app/layout.tsx(78,13): error TS1005: ';' expected.
+src/app/layout.tsx(78,23): error TS1127: Invalid character.
+src/app/layout.tsx(78,39): error TS1002: Unterminated string literal.
+src/app/layout.tsx(79,25): error TS1005: ';' expected.
+src/app/layout.tsx(79,43): error TS1005: ';' expected.
+src/app/layout.tsx(81,9): error TS1128: Declaration or statement expected.
+src/app/layout.tsx(82,7): error TS1109: Expression expected.
+src/app/layout.tsx(83,5): error TS1109: Expression expected.
+src/app/layout.tsx(84,3): error TS1109: Expression expected.

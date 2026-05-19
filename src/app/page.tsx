@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { ProductGrid } from '@/components/product/product-grid';
 import { productsApi } from '@/lib/api';
 import { Product } from '@/types';
-import { siteConfig } from '@/lib/config';
+import { siteConfig } from '../lib/config';
 
 export default function Home() {
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);

@@ -1,0 +1,23 @@
+
+> king-jesus-collection@0.1.0 build
+> next build
+
+▲ Next.js 16.2.6 (Turbopack)
+- Environments: .env.local
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 6.6s
+  Running TypeScript ...
+Failed to type check.
+
+./src/app/pos/page.tsx:266:116
+Type error: Property 'sku' does not exist on type 'Product'.
+
+  [90m264 |[0m ...
+  [90m265 |[0m ...[32mking-tight leading-tight"[0m>{item.product.name}</h4>
+[31m[1m>[0m [90m266 |[0m ...[32me font-bold tracking-widest"[0m>{item.product.sku}</p>
+  [90m    |[0m                                               [31m[1m^[0m
+  [90m267 |[0m ...
+  [90m268 |[0m ...
+  [90m269 |[0m ...
+Next.js build worker exited with code: 1 and signal: null

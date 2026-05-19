@@ -1,0 +1,23 @@
+
+> king-jesus-collection@0.1.0 build
+> next build
+
+▲ Next.js 16.2.6 (Turbopack)
+- Environments: .env.local
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 6.2s
+  Running TypeScript ...
+Failed to type check.
+
+./src/app/admin/orders/page.tsx:142:28
+Type error: Cannot find name 'Globe'.
+
+  [90m140 |[0m                     ) : (
+  [90m141 |[0m                        <div className=[32m"flex items-center gap-1.5 text-[9px] font-black up...[0m
+[31m[1m>[0m [90m142 |[0m                           <[33mGlobe[0m className=[32m"w-3 h-3"[0m />
+  [90m    |[0m                            [31m[1m^[0m
+  [90m143 |[0m                           [33mWeb[0m [33mStore[0m
+  [90m144 |[0m                        </div>
+  [90m145 |[0m                     )}
+Next.js build worker exited with code: 1 and signal: null

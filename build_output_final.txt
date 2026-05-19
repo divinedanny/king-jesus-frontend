@@ -1,0 +1,43 @@
+
+> king-jesus-collection@0.1.0 build
+> next build
+
+▲ Next.js 16.2.6 (Turbopack)
+- Environments: .env.local
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 6.5s
+  Running TypeScript ...
+  Finished TypeScript in 4.5s ...
+  Collecting page data using 1 worker ...
+  Generating static pages using 1 worker (0/19) ...
+  Generating static pages using 1 worker (4/19) 
+  Generating static pages using 1 worker (9/19) 
+  Generating static pages using 1 worker (14/19) 
+✓ Generating static pages using 1 worker (19/19) in 442ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ○ /account
+├ ○ /admin
+├ ○ /admin/analytics
+├ ○ /admin/inventory
+├ ○ /admin/orders
+├ ○ /admin/products
+├ ○ /admin/settings
+├ ○ /admin/staff
+├ ○ /admin/stores
+├ ○ /auth
+├ ○ /cart
+├ ○ /checkout
+├ ○ /pos
+├ ○ /products
+├ ƒ /products/[id]
+└ ○ /tracking
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

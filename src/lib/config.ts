@@ -76,6 +76,18 @@ Shipping Address: ${order.address}`;
   },
 };
 
+// Site configuration
+export const siteConfig = {
+  name: 'King Jesus Collection',
+  description: 'Premium faith-based apparel for the modern believer.',
+  url: 'https://king-jesus-frontend.vercel.app',
+  ogImage: 'https://king-jesus-frontend.vercel.app/og.png',
+  links: {
+    instagram: 'https://instagram.com/kingjesuscollection',
+    twitter: 'https://twitter.com/kingjesuscollection',
+  },
+};
+
 // API configuration - points to Django backend
 export const apiConfig = {
   baseUrl: process.env.NEXT_PUBLIC_API_URL || 'https://king-jesus-backend.onrender.com',

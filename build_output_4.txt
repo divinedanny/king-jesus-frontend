@@ -1,0 +1,138 @@
+
+> king-jesus-collection@0.1.0 build
+> next build
+
+▲ Next.js 16.2.6 (Turbopack)
+- Environments: .env.local
+
+  Creating an optimized production build ...
+
+> Build error occurred
+Error: Turbopack build failed with 5 errors:
+./src/lib/product-store.ts:48:17
+Nullish coalescing operator(??) requires parens when mixing with logical operators
+  [90m46 |[0m       
+  [90m47 |[0m       [36mconst[0m response = [36mawait[0m productsApi.getAll({
+[31m[1m>[0m [90m48 |[0m         search: params?.search ?? searchQuery || [36mundefined[0m,
+  [90m   |[0m                 [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m49 |[0m         category: params?.category ?? selectedCategory !== [32m'all'[0m ? selectedCategory : [36mundefined[0m,
+  [90m50 |[0m         page: params?.page,
+  [90m51 |[0m       });
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/product-store.ts [Client Component Browser]
+    ./src/app/products/[id]/page.tsx [Client Component Browser]
+    ./src/app/products/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/product-store.ts [Client Component SSR]
+    ./src/app/products/[id]/page.tsx [Client Component SSR]
+    ./src/app/products/[id]/page.tsx [Server Component]
+
+
+./src/app/products/[id]/page.tsx:11:1
+Module not found: Can't resolve '../../lib/api'
+  [90m 9 |[0m [36mimport[0m { useAuthStore } [36mfrom[0m [32m'@/lib/auth-store'[0m;
+  [90m10 |[0m [36mimport[0m { formatCurrency } [36mfrom[0m [32m'../../lib/config'[0m;
+[31m[1m>[0m [90m11 |[0m [36mimport[0m { reviewsApi, wishlistApi } [36mfrom[0m [32m'../../lib/api'[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m12 |[0m [36mimport[0m { [33mButton[0m } [36mfrom[0m [32m'@/components/ui/button'[0m;
+  [90m13 |[0m [36mimport[0m { [33mCard[0m, [33mCardContent[0m } [36mfrom[0m [32m'@/components/ui/card'[0m;
+  [90m14 |[0m [36mimport[0m { [33mReview[0m } [36mfrom[0m [32m'@/types'[0m;
+
+
+
+Import traces:
+  Client Component Browser:
+    ./src/app/products/[id]/page.tsx [Client Component Browser]
+    ./src/app/products/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/products/[id]/page.tsx [Client Component SSR]
+    ./src/app/products/[id]/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+./src/app/products/[id]/page.tsx:10:1
+Module not found: Can't resolve '../../lib/config'
+  [90m 8 |[0m [36mimport[0m { useCartStore } [36mfrom[0m [32m'@/lib/store'[0m;
+  [90m 9 |[0m [36mimport[0m { useAuthStore } [36mfrom[0m [32m'@/lib/auth-store'[0m;
+[31m[1m>[0m [90m10 |[0m [36mimport[0m { formatCurrency } [36mfrom[0m [32m'../../lib/config'[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m11 |[0m [36mimport[0m { reviewsApi, wishlistApi } [36mfrom[0m [32m'../../lib/api'[0m;
+  [90m12 |[0m [36mimport[0m { [33mButton[0m } [36mfrom[0m [32m'@/components/ui/button'[0m;
+  [90m13 |[0m [36mimport[0m { [33mCard[0m, [33mCardContent[0m } [36mfrom[0m [32m'@/components/ui/card'[0m;
+
+
+
+Import traces:
+  Client Component Browser:
+    ./src/app/products/[id]/page.tsx [Client Component Browser]
+    ./src/app/products/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/products/[id]/page.tsx [Client Component SSR]
+    ./src/app/products/[id]/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+./src/app/admin/settings/page.tsx:16:1
+Export CardTitle doesn't exist in target module
+  [90m14 |[0m } [36mfrom[0m [32m'lucide-react'[0m;
+  [90m15 |[0m [36mimport[0m { [33mButton[0m } [36mfrom[0m [32m'@/components/ui/button'[0m;
+[31m[1m>[0m [90m16 |[0m [36mimport[0m { [33mCard[0m, [33mCardContent[0m, [33mCardHeader[0m, [33mCardTitle[0m } [36mfrom[0m [32m'@/components/ui/card'[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m17 |[0m [36mimport[0m { [33mInput[0m, [33mSelect[0m } [36mfrom[0m [32m'@/components/ui/input'[0m;
+  [90m18 |[0m
+  [90m19 |[0m [36mexport[0m [36mdefault[0m [36mfunction[0m [33mAdminSettingsPage[0m() {
+
+The export CardTitle was not found in module [project]/src/components/ui/card.tsx [app-client] (ecmascript).
+Did you mean to import Card?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./src/app/admin/settings/page.tsx [Client Component Browser]
+    ./src/app/admin/settings/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/admin/settings/page.tsx [Client Component SSR]
+    ./src/app/admin/settings/page.tsx [Server Component]
+
+
+./src/app/admin/settings/page.tsx:16:1
+Export CardTitle doesn't exist in target module
+  [90m14 |[0m } [36mfrom[0m [32m'lucide-react'[0m;
+  [90m15 |[0m [36mimport[0m { [33mButton[0m } [36mfrom[0m [32m'@/components/ui/button'[0m;
+[31m[1m>[0m [90m16 |[0m [36mimport[0m { [33mCard[0m, [33mCardContent[0m, [33mCardHeader[0m, [33mCardTitle[0m } [36mfrom[0m [32m'@/components/ui/card'[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m17 |[0m [36mimport[0m { [33mInput[0m, [33mSelect[0m } [36mfrom[0m [32m'@/components/ui/input'[0m;
+  [90m18 |[0m
+  [90m19 |[0m [36mexport[0m [36mdefault[0m [36mfunction[0m [33mAdminSettingsPage[0m() {
+
+The export CardTitle was not found in module [project]/src/components/ui/card.tsx [app-ssr] (ecmascript).
+Did you mean to import Card?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./src/app/admin/settings/page.tsx [Client Component Browser]
+    ./src/app/admin/settings/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/admin/settings/page.tsx [Client Component SSR]
+    ./src/app/admin/settings/page.tsx [Server Component]
+
+
+    at <unknown> (./src/lib/product-store.ts:48:17)
+    at <unknown> (./src/app/products/[id]/page.tsx:11:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (./src/app/products/[id]/page.tsx:10:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (./src/app/admin/settings/page.tsx:16:1)
+    at <unknown> (./src/app/admin/settings/page.tsx:16:1)

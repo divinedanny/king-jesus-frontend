@@ -19,8 +19,8 @@ import {
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input, Select } from '@/components/ui/input';
-import { inventoryApi, storesApi, productsApi, stockTransferApi } from '@/lib/api';
-import { formatCurrency } from '@/lib/config';
+import { inventoryApi, storesApi, productsApi, stockTransferApi } from '../../../lib/api';
+import { formatCurrency, apiConfig } from '../../../lib/config';
 
 export default function InventoryPage() {
   const [activeTab, setActiveTab] = useState<'overview' | 'transfers' | 'alerts'>('overview');

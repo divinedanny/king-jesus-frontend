@@ -6,6 +6,8 @@ export interface Product {
   price: number;
   currency: 'NGN' | 'USD';
   stock_quantity: number;
+  sku?: string;
+  average_rating?: number;
   images: string[];
   category: Category;
   category_id: string;
@@ -138,4 +140,19 @@ export interface CheckoutSession {
   whatsapp_link?: string;
   amount: number;
   currency: 'NGN' | 'USD';
+}
+export interface Review {
+  id: string;
+  user: {
+    full_name: string;
+  };
+  rating: number;
+  comment: string;
+  created_at: string;
+}
+
+export interface Wishlist {
+  id: string;
+  user_id: string;
+  products: Product[];
 }

@@ -32,6 +32,22 @@ export function CardHeader({ children, className = '' }: { children: React.React
   );
 }
 
+export function CardTitle({ children, className = '' }: { children: React.ReactNode; className?: string }) {
+  return (
+    <h3 className={`text-lg font-semibold leading-none tracking-tight ${className}`}>
+      {children}
+    </h3>
+  );
+}
+
+export function CardDescription({ children, className = '' }: { children: React.ReactNode; className?: string }) {
+  return (
+    <p className={`text-sm text-gray-500 ${className}`}>
+      {children}
+    </p>
+  );
+}
+
 export function CardContent({ children, className = '' }: { children: React.ReactNode; className?: string }) {
   return <div className={`px-6 py-4 ${className}`}>{children}</div>;
 }

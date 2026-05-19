@@ -3,15 +3,15 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { ArrowLeft, ShoppingCart, Minus, Plus, Check, Heart, Star, Share2 } from 'lucide-react';
+import { ArrowLeft, ShoppingCart, Minus, Plus, Check, Heart, Star, Share2, Truck } from 'lucide-react';
 import { useProductStore } from '@/lib/product-store';
 import { useCartStore } from '@/lib/store';
 import { useAuthStore } from '@/lib/auth-store';
-import { formatCurrency } from '@/lib/config';
-import { reviewsApi, wishlistApi } from '@/lib/api';
+import { formatCurrency } from '../../../lib/config';
+import { reviewsApi, wishlistApi } from '../../../lib/api';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Review } from '@/types';
+import { Review, Wishlist, Product } from '../../../types/index';
 
 export default function ProductDetailPage() {
   const params = useParams();
@@ -41,8 +41,8 @@ export default function ProductDetailPage() {
   const checkWishlist = useCallback(async () => {
     if (!isAuthenticated) return;
     try {
-      const wishlists = await wishlistApi.get();
-      const found = wishlists.some(w => w.products.some(p => p.id === productId));
+      const wishlists: any[] = await wishlistApi.get();
+      const found = wishlists.some((w: any) => w.products.some((p: any) => p.id === productId));
       setIsInWishlist(found);
     } catch (err) {
       console.error('Failed to check wishlist', err);

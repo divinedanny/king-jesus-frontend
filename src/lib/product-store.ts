@@ -13,6 +13,7 @@ interface ProductState {
     next: string | null;
     previous: string | null;
     page: number;
+    total_pages: number;
   } | null;
   
   // Filters
@@ -45,8 +46,8 @@ export const useProductStore = create<ProductState>((set, get) => ({
       const { searchQuery, selectedCategory } = get();
       
       const response = await productsApi.getAll({
-        search: params?.search ?? searchQuery || undefined,
-        category: params?.category ?? selectedCategory !== 'all' ? selectedCategory : undefined,
+        search: (params?.search ?? searchQuery) || undefined,
+        category: params?.category ?? (selectedCategory !== 'all' ? selectedCategory : undefined),
         page: params?.page,
       });
       
@@ -57,6 +58,7 @@ export const useProductStore = create<ProductState>((set, get) => ({
           next: response.next,
           previous: response.previous,
           page: params?.page || 1,
+          total_pages: Math.ceil(response.count / 10),
         },
         isLoading: false,
       });

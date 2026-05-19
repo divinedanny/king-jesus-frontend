@@ -4,7 +4,7 @@ import React, { useState, useEffect, Suspense } from 'react';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { useCartStore } from '@/lib/store';
-import { siteConfig } from '@/lib/config';
+import { siteConfig } from '../../lib/config';
 
 interface EcommerceLayoutProps {
   children: React.ReactNode;

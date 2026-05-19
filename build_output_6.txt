@@ -1,0 +1,36 @@
+
+> king-jesus-collection@0.1.0 build
+> next build
+
+▲ Next.js 16.2.6 (Turbopack)
+- Environments: .env.local
+
+  Creating an optimized production build ...
+
+> Build error occurred
+Error: Turbopack build failed with 1 errors:
+./src/lib/product-store.ts:48:17
+Nullish coalescing operator(??) requires parens when mixing with logical operators
+  [90m46 |[0m       
+  [90m47 |[0m       [36mconst[0m response = [36mawait[0m productsApi.getAll({
+[31m[1m>[0m [90m48 |[0m         search: params?.search ?? searchQuery || [36mundefined[0m,
+  [90m   |[0m                 [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m49 |[0m         category: params?.category ?? selectedCategory !== [32m'all'[0m ? selectedCategory : [36mundefined[0m,
+  [90m50 |[0m         page: params?.page,
+  [90m51 |[0m       });
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/product-store.ts [Client Component Browser]
+    ./src/app/products/[id]/page.tsx [Client Component Browser]
+    ./src/app/products/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/product-store.ts [Client Component SSR]
+    ./src/app/products/[id]/page.tsx [Client Component SSR]
+    ./src/app/products/[id]/page.tsx [Server Component]
+
+
+    at <unknown> (./src/lib/product-store.ts:48:17)

@@ -30,7 +30,7 @@ export default function AdminDashboard() {
     setIsLoading(true);
     try {
       const [analyticsRes, lowStockRes] = await Promise.all([
-        analyticsApi.getSales({ date_range: '30d' }),
+        analyticsApi.getSales({}),
         inventoryApi.getLowStockAlerts()
       ]);
       setAnalytics(analyticsRes);

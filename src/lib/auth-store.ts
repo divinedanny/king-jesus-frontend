@@ -52,9 +52,9 @@ export const useAuthStore = create<AuthState>()(
           if (typeof window !== 'undefined') {
             localStorage.setItem('auth_token', response.token);
           }
-          setUser(response.user);
+          get().setUser(response.user);
         } catch (error) {
-          setError(error instanceof Error ? error.message : 'Login failed');
+          get().setError(error instanceof Error ? error.message : 'Login failed');
           throw error;
         }
       },
@@ -90,7 +90,7 @@ export const useAuthStore = create<AuthState>()(
         
         try {
           const user = await authApi.getProfile();
-          setUser(user);
+          get().setUser(user);
         } catch (error) {
           // Token invalid or expired
           console.error('Auth check failed:', error);

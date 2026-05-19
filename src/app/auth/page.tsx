@@ -5,9 +5,9 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { Mail, Lock, User, ArrowRight, ShieldCheck, Globe, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '../../components/ui/card';
 import { useAuthStore } from '@/lib/auth-store';
-import { siteConfig } from '@/lib/config';
+import { siteConfig } from '../../lib/config';
 
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);

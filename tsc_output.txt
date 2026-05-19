@@ -1,0 +1,4 @@
+src/lib/auth-store.ts(55,11): error TS2304: Cannot find name 'setUser'.
+src/lib/auth-store.ts(57,11): error TS2304: Cannot find name 'setError'.
+src/lib/auth-store.ts(93,11): error TS2304: Cannot find name 'setUser'.
+src/lib/product-store.ts(61,61): error TS2339: Property 'page_size' does not exist on type '{ count: number; next: string | null; previous: string | null; results: Product[]; }'.

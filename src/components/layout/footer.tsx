@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { Phone, Mail, MapPin, Clock } from 'lucide-react';
-import { siteConfig, whatsappConfig } from '@/lib/config';
+import { siteConfig, whatsappConfig } from '../../lib/config';
 
 export function Footer() {
   return (

@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useCartStore } from '@/lib/store';
-import { shippingApi, checkoutApi } from '@/lib/api';
-import { formatCurrency, siteConfig, whatsappConfig } from '@/lib/config';
+import { useCartStore } from '../../lib/store';
+import { shippingApi, checkoutApi } from '../../lib/api';
+import { formatCurrency, siteConfig, whatsappConfig } from '../../lib/config';
 import { 
   Truck, 
   CreditCard, 

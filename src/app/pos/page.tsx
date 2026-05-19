@@ -263,7 +263,7 @@ export default function POSPage() {
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1">
                     <h4 className="text-[10px] font-black uppercase tracking-tight leading-tight">{item.product.name}</h4>
-                    <p className="text-[9px] text-gray-500 mt-1 uppercase font-bold tracking-widest">{item.product.sku}</p>
+                    <p className="text-[9px] text-gray-500 mt-1 uppercase font-bold tracking-widest">{(item.product as any).sku}</p>
                   </div>
                   <button 
                     onClick={() => removeFromCart(item.product.id)}
